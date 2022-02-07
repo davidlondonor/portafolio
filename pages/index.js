@@ -12,7 +12,10 @@ export default function Home() {
 			</Head>
 
 			<main className="">
-				<h1 className="text-9xl text-blue-600 font-thin">
+				<h1
+					className="text-9xl text-
+         font-thin"
+				>
 					<a href="https://nextjs.org">Portafolio</a>
 				</h1>
 			</main>
