@@ -18,7 +18,7 @@ export default function Home() {
 				>
 					<a href="https://nextjs.org">Portafolio UI Dev</a>
 				</h1>
-				<p className="text-2xl text-blue-500">David Londono</p>
+				<p className="text-2xl text-white">David Londono</p>
 			</main>
 		</div>
 	);
