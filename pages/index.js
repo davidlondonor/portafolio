@@ -5,7 +5,7 @@ import { useTypingText } from "../components/useTypingText";
 
 export default function Home() {
 	const { word } = useTypingText(
-		["Accessibility", "Frontend Developer", "User Interface"],
+		["Accessibility", "Frontend Developer", "User Interface", "Web designer"],
 		130,
 		20
 	);
@@ -36,7 +36,7 @@ export default function Home() {
 						href="#"
 						className="mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-gray-600 bg-white hover:bg-indigo-50 sm:w-auto"
 					>
-						&#8594; Loading...
+						🖥 &nbsp; ✏️ &nbsp;☕
 					</a>
 				</div>
 			</div>
