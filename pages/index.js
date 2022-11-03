@@ -1,9 +1,15 @@
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import Text from "../components/Text";
+import { useTypingText } from "../components/useTypingText";
 
 export default function Home() {
+	const { word } = useTypingText(
+		["Accessibility", "Frontend Developer", "User Interface"],
+		130,
+		20
+	);
+
 	return (
 		<div>
 			<Head>
@@ -14,19 +20,24 @@ export default function Home() {
 			<div className="bg-yellow-400 h-screen">
 				<div className="max-w-2xl mx-auto text-center py-16 px-4 sm:py-20 sm:px-6 lg:px-8">
 					<h2 className="text-3xl font-extrabold text-black sm:text-4xl">
-						<span className="block">UI Developer</span>
-						<span className="block font-semibold">David Londono</span>
+						<span className="block text-yellow-700 opacity-25">
+							UI Developer
+						</span>
+						<h1 className="font-bold text-5xl">I like {word}</h1>
+						<br></br>{" "}
+						<p className="font-mono text-sm opacity-40">
+							with <code>NextJS</code>
+						</p>
+						<span className="block font-semibold text-yellow-600">
+							David Londono
+						</span>
 					</h2>
-					<p className="mt-4 text-lg leading-6 text-gray-700">
-						ReactJS, NextJS, UI, UX, Accessibility,
-					</p>
 					<a
 						href="#"
 						className="mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-gray-600 bg-white hover:bg-indigo-50 sm:w-auto"
 					>
-						En construccion
+						&#8594; Loading...
 					</a>
-					{/* <Text /> */}
 				</div>
 			</div>
 		</div>
