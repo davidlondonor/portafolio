@@ -202,7 +202,7 @@ body {
 .card-minimal {
   padding: 2rem 0;
   border-bottom: 1px solid var(--color-border);
-  transition: padding-left 0.3s ease;
+  transition: padding-left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card-minimal:hover {

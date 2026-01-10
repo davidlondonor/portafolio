@@ -12,7 +12,7 @@ export default function Home() {
 		},
 		{
 			num: "02",
-			title: "Desarrollo Frontend",
+			title: "Desarrollo Frontend Layout",
 			desc: "Codigo limpio y performante con las tecnologias mas modernas.",
 		},
 		{
@@ -169,10 +169,11 @@ export default function Home() {
 								{[
 									"React",
 									"Next.js",
-									"TypeScript",
+									"HTML5",
+									"CSS3",
 									"Figma",
 									"Tailwind",
-									"Node.js",
+									"Accesibilidad",
 								].map((tech, j) => (
 									<span
 										key={j}
@@ -241,7 +242,7 @@ export default function Home() {
 							<div>
 								<p className="body-sm mb-6">Sobre mi</p>
 								<h2 className="display-lg mb-8">
-									Mas de 6 anos creando experiencias digitales
+									Mas de 6 años creando experiencias digitales
 									memorables
 								</h2>
 								<p className="body-lg">
@@ -349,7 +350,7 @@ export default function Home() {
 							<p className="body-sm mb-6 text-[var(--color-bg)]/60">
 								Contacto
 							</p>
-							<h2 className="display-xl mb-8">
+							<h2 className="display-lg mb-8">
 								Trabajemos
 								<br />
 								juntos
