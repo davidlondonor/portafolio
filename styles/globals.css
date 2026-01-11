@@ -9,8 +9,8 @@
   --color-text-light: #78716C;
   --color-accent: #B91C1C;
   --color-border: #E7E5E4;
-  --font-serif: 'Cormorant Garamond', Georgia, serif;
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-serif: var(--font-geist-sans), system-ui, sans-serif;
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
 }
 
 * {

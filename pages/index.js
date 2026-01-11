@@ -1,8 +1,15 @@
 import Head from "next/head";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
 	const revealRefs = useRef([]);
+	const [formData, setFormData] = useState({
+		name: "",
+		email: "",
+		message: "",
+	});
+	const [formStatus, setFormStatus] = useState("");
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const services = [
 		{
@@ -35,13 +42,13 @@ export default function Home() {
 			num: "01",
 			title: "E-Commerce Platform",
 			category: "Desarrollo Web",
-			year: "2024",
+			year: "2026",
 		},
 		{
 			num: "02",
 			title: "Dashboard Analytics",
 			category: "Aplicacion Web",
-			year: "2024",
+			year: "2026",
 		},
 		{
 			num: "03",
@@ -80,10 +87,50 @@ export default function Home() {
 		}
 	};
 
+	const handleInputChange = (e) => {
+		const { name, value } = e.target;
+		setFormData((prev) => ({
+			...prev,
+			[name]: value,
+		}));
+	};
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		setIsSubmitting(true);
+		setFormStatus("");
+
+		try {
+			const response = await fetch("https://api.web3forms.com/submit", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					access_key: "823357c7-b029-4311-b1ca-0b6b07a58924",
+					name: formData.name,
+					email: formData.email,
+					message: formData.message,
+				}),
+			});
+
+			if (response.ok) {
+				setFormStatus("success");
+				setFormData({ name: "", email: "", message: "" });
+			} else {
+				setFormStatus("error");
+			}
+		} catch (error) {
+			setFormStatus("error");
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
+
 	return (
 		<>
 			<Head>
-				<title>David Londono | Creative Developer</title>
+				<title>David Londoño | Creative Developer</title>
 				<meta
 					name="description"
 					content="Frontend Developer & UI Designer based in Colombia"
@@ -93,23 +140,24 @@ export default function Home() {
 
 			<div className="page-transition">
 				{/* Navigation */}
-				<nav className="fixed top-0 left-0 right-0 z-50 bg-[var(--color-bg)]/90 backdrop-blur-sm">
+				<nav className="fixed top-8 left-0 right-0 z-50 bg-[var(--color-bg)]/90 backdrop-blur-sm">
 					<div className="container-editorial py-6 flex justify-between items-center">
 						<a href="#" className="font-serif text-xl">
 							DL
 						</a>
 						<div className="hidden md:flex gap-8">
-							{["Inicio", "Servicios", "Proyectos", "Contacto"].map(
-								(item) => (
-									<a
-										key={item}
-										href={`#${item.toLowerCase()}`}
-										className="nav-link"
-									>
-										{item}
-									</a>
-								)
-							)}
+							<a href="#inicio" className="nav-link">
+								Inicio
+							</a>
+							<a href="#servicios" className="nav-link">
+								Servicios
+							</a>
+							<a href="/portfolio" className="nav-link">
+								Portafolio
+							</a>
+							<a href="#proyectos" className="nav-link">
+								Proyectos
+							</a>
 						</div>
 					</div>
 				</nav>
@@ -132,24 +180,13 @@ export default function Home() {
 								<h1 className="display-xl">
 									David
 									<br />
-									Londono
+									Londoño
 								</h1>
 								<p className="body-lg max-w-lg">
 									Creo experiencias digitales que combinan estetica y
 									funcionalidad. Diseno y desarrollo interfaces que
 									cuentan historias.
 								</p>
-								<a href="#contacto" className="btn-minimal">
-									<span>Hablemos</span>
-									<svg
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										strokeWidth="2"
-									>
-										<path d="M7 17L17 7M17 7H7M17 7V17" />
-									</svg>
-								</a>
 							</div>
 						</div>
 
@@ -346,26 +383,97 @@ export default function Home() {
 					className="section bg-[var(--color-text)] text-[var(--color-bg)]"
 				>
 					<div className="container-editorial">
-						<div ref={addToRefs} className="reveal text-center">
-							<p className="body-sm mb-6 text-[var(--color-bg)]/60">
-								Contacto
-							</p>
-							<h2 className="display-lg mb-8">
-								Trabajemos
-								<br />
-								juntos
-							</h2>
-							<p className="body-lg text-[var(--color-bg)]/70 max-w-xl mx-auto mb-12">
-								Siempre estoy abierto a nuevos proyectos y
-								colaboraciones interesantes. Si tienes una idea,
-								hablemos.
-							</p>
-							<a
-								href="mailto:hola@davidlondono.co"
-								className="inline-block text-2xl md:text-4xl font-serif link-underline"
-							>
-								hola@davidlondono.co
-							</a>
+						<div ref={addToRefs} className="reveal max-w-2xl mx-auto">
+							<div className="text-center mb-12">
+								<p className="body-sm mb-6 text-[var(--color-bg)]/60">
+									Contacto
+								</p>
+								<h2 className="display-md mb-4">Trabajemos juntos</h2>
+								<p className="body-lg text-[var(--color-bg)]/70">
+									Siempre estoy abierto a nuevos proyectos y
+									colaboraciones interesantes. Si tienes una idea,
+									hablemos.
+								</p>
+							</div>
+
+							<form onSubmit={handleSubmit} className="space-y-6">
+								<div>
+									<label
+										htmlFor="name"
+										className="block body-sm mb-2 text-[var(--color-bg)]/80"
+									>
+										Nombre
+									</label>
+									<input
+										type="text"
+										id="name"
+										name="name"
+										value={formData.name}
+										onChange={handleInputChange}
+										required
+										className="w-full px-4 py-3 bg-[var(--color-bg)]/10 border border-[var(--color-bg)]/20 rounded-sm text-[var(--color-bg)] placeholder-[var(--color-bg)]/40 focus:outline-none focus:border-[var(--color-accent)] transition-colors"
+										placeholder="Tu nombre"
+									/>
+								</div>
+
+								<div>
+									<label
+										htmlFor="email"
+										className="block body-sm mb-2 text-[var(--color-bg)]/80"
+									>
+										Email
+									</label>
+									<input
+										type="email"
+										id="email"
+										name="email"
+										value={formData.email}
+										onChange={handleInputChange}
+										required
+										className="w-full px-4 py-3 bg-[var(--color-bg)]/10 border border-[var(--color-bg)]/20 rounded-sm text-[var(--color-bg)] placeholder-[var(--color-bg)]/40 focus:outline-none focus:border-[var(--color-accent)] transition-colors"
+										placeholder="tu@email.com"
+									/>
+								</div>
+
+								<div>
+									<label
+										htmlFor="message"
+										className="block body-sm mb-2 text-[var(--color-bg)]/80"
+									>
+										Mensaje
+									</label>
+									<textarea
+										id="message"
+										name="message"
+										value={formData.message}
+										onChange={handleInputChange}
+										required
+										rows="5"
+										className="w-full px-4 py-3 bg-[var(--color-bg)]/10 border border-[var(--color-bg)]/20 rounded-sm text-[var(--color-bg)] placeholder-[var(--color-bg)]/40 focus:outline-none focus:border-[var(--color-accent)] transition-colors resize-none"
+										placeholder="Cuéntame sobre tu proyecto..."
+									></textarea>
+								</div>
+
+								<button
+									type="submit"
+									disabled={isSubmitting}
+									className="w-full px-8 py-4 bg-[var(--color-bg)] text-[var(--color-text)] border border-[var(--color-bg)] hover:bg-transparent hover:text-[var(--color-bg)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+								>
+									{isSubmitting ? "Enviando..." : "Enviar mensaje"}
+								</button>
+
+								{formStatus === "success" && (
+									<p className="text-center text-[var(--color-bg)] body-sm">
+										✓ Mensaje enviado correctamente. Te responderé pronto!
+									</p>
+								)}
+
+								{formStatus === "error" && (
+									<p className="text-center text-red-300 body-sm">
+										✗ Hubo un error. Por favor intenta nuevamente.
+									</p>
+								)}
+							</form>
 						</div>
 					</div>
 				</section>
@@ -374,7 +482,7 @@ export default function Home() {
 				<footer className="footer-editorial">
 					<div className="container-editorial">
 						<div className="flex flex-col md:flex-row justify-between items-center gap-6">
-							<p className="body-sm">2024 David Londono</p>
+							<p className="body-sm">2026 David Londoño</p>
 							<div className="flex gap-8">
 								{[
 									{
