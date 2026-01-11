@@ -39,7 +39,7 @@ export default function Portfolio() {
 		return (
 			<>
 				<Head>
-					<title>Portfolio Privado | David Londono</title>
+					<title>Portfolio Privado | David Londoño</title>
 					<meta name="robots" content="noindex, nofollow" />
 				</Head>
 
@@ -125,7 +125,7 @@ export default function Portfolio() {
 			num: "03",
 			title: "Proyecto Confidencial C",
 			client: "Agencia Digital",
-			year: "2024",
+			year: "2026",
 			tech: ["Vue.js", "Firebase", "TailwindCSS"],
 			description:
 				"Aplicación web para gestión de campañas y métricas de marketing.",
@@ -135,7 +135,7 @@ export default function Portfolio() {
 	return (
 		<>
 			<Head>
-				<title>Portfolio Privado | David Londono</title>
+				<title>Portfolio Privado | David Londoño</title>
 				<meta name="robots" content="noindex, nofollow" />
 			</Head>
 
@@ -234,7 +234,7 @@ export default function Portfolio() {
 				<footer className="footer-editorial">
 					<div className="container-editorial">
 						<div className="flex flex-col md:flex-row justify-between items-center gap-6">
-							<p className="body-sm">2026 David Londono - Contenido Privado</p>
+							<p className="body-sm">2026 David Londoño - Contenido Privado</p>
 							<button
 								onClick={handleLogout}
 								className="nav-link link-underline"
