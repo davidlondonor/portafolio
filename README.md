@@ -32,3 +32,26 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## Private portfolio setup
+
+The private portfolio uses server-side validation. You must provide two environment variables locally before testing:
+
+- `PORTFOLIO_PASSWORD` — password users submit to access the private portfolio
+- `PORTFOLIO_AUTH_SECRET` — a long secret used to sign authentication tokens
+
+Create a `.env.local` at the project root (you can copy `.env.example`) and restart the dev server after setting values:
+
+```bash
+cp .env.example .env.local
+# Edit .env.local and set PORTFOLIO_PASSWORD and PORTFOLIO_AUTH_SECRET
+npm run dev
+```
+
+If you see `Server not configured` when submitting the password, it means one of the required env vars is missing.
+
+To generate a random secret (macOS / Linux):
+
+```bash
+node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
+```

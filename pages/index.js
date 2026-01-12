@@ -1,7 +1,9 @@
 import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function Home() {
+	const { language, toggleLanguage, t } = useLanguage();
 	const revealRefs = useRef([]);
 	const [formData, setFormData] = useState({
 		name: "",
@@ -10,53 +12,6 @@ export default function Home() {
 	});
 	const [formStatus, setFormStatus] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
-
-	const services = [
-		{
-			num: "01",
-			title: "Diseno de Interfaces",
-			desc: "Creo interfaces intuitivas y elegantes que conectan con los usuarios.",
-		},
-		{
-			num: "02",
-			title: "Desarrollo Frontend Layout",
-			desc: "Codigo limpio y performante con las tecnologias mas modernas.",
-		},
-		{
-			num: "03",
-			title: "Experiencias Interactivas",
-			desc: "Animaciones y microinteracciones que dan vida a los proyectos.",
-		},
-	];
-
-	const skills = [
-		{ name: "React / Next.js", years: "5 anos" },
-		{ name: "TypeScript", years: "4 anos" },
-		{ name: "Diseno UI/UX", years: "6 anos" },
-		{ name: "CSS / Tailwind", years: "6 anos" },
-		{ name: "Node.js", years: "4 anos" },
-	];
-
-	const projects = [
-		{
-			num: "01",
-			title: "E-Commerce Platform",
-			category: "Desarrollo Web",
-			year: "2026",
-		},
-		{
-			num: "02",
-			title: "Dashboard Analytics",
-			category: "Aplicacion Web",
-			year: "2026",
-		},
-		{
-			num: "03",
-			title: "Mobile Banking App",
-			category: "UI/UX Design",
-			year: "2023",
-		},
-	];
 
 	// Scroll reveal effect
 	useEffect(() => {
@@ -147,17 +102,27 @@ export default function Home() {
 						</a>
 						<div className="hidden md:flex gap-8">
 							<a href="#inicio" className="nav-link">
-								Inicio
+								{t.nav.home}
 							</a>
 							<a href="#servicios" className="nav-link">
-								Servicios
+								{t.nav.services}
 							</a>
 							<a href="/portfolio" className="nav-link">
-								Portafolio
+								{t.nav.portfolio}
 							</a>
 							<a href="#proyectos" className="nav-link">
-								Proyectos
+								{t.nav.projects}
 							</a>
+							<a href="#contacto" className="nav-link">
+								{t.nav.contact}
+							</a>
+							<button
+								onClick={toggleLanguage}
+								className="nav-link text-sm uppercase"
+								title="Change language"
+							>
+								{language === 'es' ? 'EN' : 'ES'}
+							</button>
 						</div>
 					</div>
 				</nav>
@@ -171,7 +136,7 @@ export default function Home() {
 						<div className="grid-editorial items-end">
 							{/* Left Column */}
 							<div className="space-y-6">
-								<p className="body-sm">Frontend Developer</p>
+								<p className="body-sm">{t.hero.role}</p>
 								<div className="accent-line"></div>
 							</div>
 
@@ -183,16 +148,14 @@ export default function Home() {
 									Londoño
 								</h1>
 								<p className="body-lg max-w-lg">
-									Creo experiencias digitales que combinan estetica y
-									funcionalidad. Diseno y desarrollo interfaces que
-									cuentan historias.
+									{t.hero.description}
 								</p>
 							</div>
 						</div>
 
 						{/* Scroll indicator */}
 						<div className="mt-24 flex items-center gap-4">
-							<span className="body-sm">Scroll</span>
+							<span className="body-sm">{t.hero.scroll}</span>
 							<div className="w-px h-12 bg-[var(--color-border)]"></div>
 						</div>
 					</div>
@@ -233,17 +196,15 @@ export default function Home() {
 						>
 							{/* Left */}
 							<div className="sticky top-32">
-								<p className="body-sm mb-4">Servicios</p>
-								<h2 className="display-md">
-									Lo que
-									<br />
-									hago mejor
+								<p className="body-sm mb-4">{t.services.title}</p>
+								<h2 className="display-md" style={{ whiteSpace: 'pre-line' }}>
+									{t.services.subtitle}
 								</h2>
 							</div>
 
 							{/* Right */}
 							<div>
-								{services.map((service, i) => (
+								{t.services.items.map((service, i) => (
 									<div
 										key={i}
 										ref={addToRefs}
@@ -251,9 +212,9 @@ export default function Home() {
 									>
 										<div className="flex justify-between items-start mb-4">
 											<span className="number-indicator">
-												{service.num}
+												{String(i + 1).padStart(2, '0')}
 											</span>
-											<span className="body-sm">Servicio</span>
+											<span className="body-sm">{t.services.label}</span>
 										</div>
 										<h3 className="display-md mb-4">
 											{service.title}
@@ -277,23 +238,19 @@ export default function Home() {
 						>
 							{/* Left - Big text */}
 							<div>
-								<p className="body-sm mb-6">Sobre mi</p>
+								<p className="body-sm mb-6">{t.about.label}</p>
 								<h2 className="display-lg mb-8">
-									Mas de 6 años creando experiencias digitales
-									memorables
+									{t.about.title}
 								</h2>
 								<p className="body-lg">
-									Soy un desarrollador frontend apasionado por el
-									diseno y la tecnologia. Me especializo en crear
-									interfaces que no solo se ven bien, sino que
-									funcionan de manera excepcional.
+									{t.about.description}
 								</p>
 							</div>
 
 							{/* Right - Skills */}
 							<div className="space-y-0">
-								<p className="body-sm mb-6">Habilidades</p>
-								{skills.map((skill, i) => (
+								<p className="body-sm mb-6">{t.about.skillsTitle}</p>
+								{t.about.skills.map((skill, i) => (
 									<div key={i} className="skill-item">
 										<span className="font-serif">{skill.name}</span>
 										<span className="skill-dots"></span>
@@ -309,12 +266,12 @@ export default function Home() {
 				<section id="proyectos" className="section">
 					<div className="container-editorial">
 						<div ref={addToRefs} className="reveal mb-16">
-							<p className="body-sm mb-4">Proyectos Seleccionados</p>
-							<h2 className="display-lg">Trabajo reciente</h2>
+							<p className="body-sm mb-4">{t.projects.label}</p>
+							<h2 className="display-lg">{t.projects.title}</h2>
 						</div>
 
 						<div className="space-y-0">
-							{projects.map((project, i) => (
+							{t.projects.items.map((project, i) => (
 								<div
 									key={i}
 									ref={addToRefs}
@@ -327,7 +284,7 @@ export default function Home() {
 										<div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
 											<div className="flex items-baseline gap-6">
 												<span className="number-indicator">
-													{project.num}
+													{String(i + 1).padStart(2, '0')}
 												</span>
 												<h3 className="display-md group-hover:text-[var(--color-accent)] transition-colors">
 													{project.title}
@@ -363,7 +320,7 @@ export default function Home() {
 								rel="noopener noreferrer"
 								className="btn-minimal"
 							>
-								<span>Ver todos los proyectos</span>
+								<span>{t.projects.viewAll}</span>
 								<svg
 									viewBox="0 0 24 24"
 									fill="none"
@@ -386,13 +343,11 @@ export default function Home() {
 						<div ref={addToRefs} className="reveal max-w-2xl mx-auto">
 							<div className="text-center mb-12">
 								<p className="body-sm mb-6 text-[var(--color-bg)]/60">
-									Contacto
+									{t.contact.label}
 								</p>
-								<h2 className="display-md mb-4">Trabajemos juntos</h2>
+								<h2 className="display-md mb-4">{t.contact.title}</h2>
 								<p className="body-lg text-[var(--color-bg)]/70">
-									Siempre estoy abierto a nuevos proyectos y
-									colaboraciones interesantes. Si tienes una idea,
-									hablemos.
+									{t.contact.description}
 								</p>
 							</div>
 
@@ -402,7 +357,7 @@ export default function Home() {
 										htmlFor="name"
 										className="block body-sm mb-2 text-[var(--color-bg)]/80"
 									>
-										Nombre
+										{t.contact.form.name}
 									</label>
 									<input
 										type="text"
@@ -412,7 +367,7 @@ export default function Home() {
 										onChange={handleInputChange}
 										required
 										className="w-full px-4 py-3 bg-[var(--color-bg)]/10 border border-[var(--color-bg)]/20 rounded-sm text-[var(--color-bg)] placeholder-[var(--color-bg)]/40 focus:outline-none focus:border-[var(--color-accent)] transition-colors"
-										placeholder="Tu nombre"
+										placeholder={t.contact.form.namePlaceholder}
 									/>
 								</div>
 
@@ -421,7 +376,7 @@ export default function Home() {
 										htmlFor="email"
 										className="block body-sm mb-2 text-[var(--color-bg)]/80"
 									>
-										Email
+										{t.contact.form.email}
 									</label>
 									<input
 										type="email"
@@ -431,7 +386,7 @@ export default function Home() {
 										onChange={handleInputChange}
 										required
 										className="w-full px-4 py-3 bg-[var(--color-bg)]/10 border border-[var(--color-bg)]/20 rounded-sm text-[var(--color-bg)] placeholder-[var(--color-bg)]/40 focus:outline-none focus:border-[var(--color-accent)] transition-colors"
-										placeholder="tu@email.com"
+										placeholder={t.contact.form.emailPlaceholder}
 									/>
 								</div>
 
@@ -440,7 +395,7 @@ export default function Home() {
 										htmlFor="message"
 										className="block body-sm mb-2 text-[var(--color-bg)]/80"
 									>
-										Mensaje
+										{t.contact.form.message}
 									</label>
 									<textarea
 										id="message"
@@ -450,7 +405,7 @@ export default function Home() {
 										required
 										rows="5"
 										className="w-full px-4 py-3 bg-[var(--color-bg)]/10 border border-[var(--color-bg)]/20 rounded-sm text-[var(--color-bg)] placeholder-[var(--color-bg)]/40 focus:outline-none focus:border-[var(--color-accent)] transition-colors resize-none"
-										placeholder="Cuéntame sobre tu proyecto..."
+										placeholder={t.contact.form.messagePlaceholder}
 									></textarea>
 								</div>
 
@@ -459,18 +414,18 @@ export default function Home() {
 									disabled={isSubmitting}
 									className="w-full px-8 py-4 bg-[var(--color-bg)] text-[var(--color-text)] border border-[var(--color-bg)] hover:bg-transparent hover:text-[var(--color-bg)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
 								>
-									{isSubmitting ? "Enviando..." : "Enviar mensaje"}
+									{isSubmitting ? t.contact.form.sending : t.contact.form.submit}
 								</button>
 
 								{formStatus === "success" && (
 									<p className="text-center text-[var(--color-bg)] body-sm">
-										✓ Mensaje enviado correctamente. Te responderé pronto!
+										{t.contact.form.success}
 									</p>
 								)}
 
 								{formStatus === "error" && (
 									<p className="text-center text-red-300 body-sm">
-										✗ Hubo un error. Por favor intenta nuevamente.
+										{t.contact.form.error}
 									</p>
 								)}
 							</form>
@@ -482,7 +437,7 @@ export default function Home() {
 				<footer className="footer-editorial">
 					<div className="container-editorial">
 						<div className="flex flex-col md:flex-row justify-between items-center gap-6">
-							<p className="body-sm">2026 David Londoño</p>
+							<p className="body-sm">{t.footer.copyright}</p>
 							<div className="flex gap-8">
 								{[
 									{
