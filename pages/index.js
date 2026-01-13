@@ -1,6 +1,11 @@
 import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
+import AnimatedHero from "../components/AnimatedHero";
+import RevealOnScroll from "../components/RevealOnScroll";
+import CardAnimation from "../components/CardAnimation";
+import SplitTextAnimation from "../components/SplitTextAnimation";
+import CloudsBackground from "../components/CloudsBackground";
 
 export default function Home() {
 	const { language, toggleLanguage, t } = useLanguage();
@@ -93,7 +98,10 @@ export default function Home() {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
-			<div className="page-transition">
+			{/* Animated Clouds Background */}
+			<CloudsBackground />
+
+			<div className="page-transition relative z-10">
 				{/* Navigation */}
 				<nav className="fixed top-8 left-0 right-0 z-50 bg-[var(--color-bg)]/90 backdrop-blur-sm">
 					<div className="container-editorial py-6 flex justify-between items-center">
@@ -121,45 +129,46 @@ export default function Home() {
 								className="nav-link text-sm uppercase"
 								title="Change language"
 							>
-								{language === 'es' ? 'EN' : 'ES'}
+								{language === "es" ? "EN" : "ES"}
 							</button>
 						</div>
 					</div>
 				</nav>
 
-				{/* Hero Section */}
-				<section
-					id="inicio"
-					className="min-h-screen flex items-center pt-24"
-				>
-					<div className="container-editorial">
-						<div className="grid-editorial items-end">
-							{/* Left Column */}
-							<div className="space-y-6">
-								<p className="body-sm">{t.hero.role}</p>
-								<div className="accent-line"></div>
+				{/* Hero Section with GSAP Animation */}
+				<AnimatedHero>
+					<section
+						id="inicio"
+						className="min-h-screen flex items-center pt-24"
+					>
+						<div className="container-editorial">
+							<div className="grid-editorial items-end">
+								{/* Left Column */}
+								<div className="space-y-6">
+									<p className="body-sm hero-title">{t.hero.role}</p>
+									<div className="accent-line hero-accent-line"></div>
+								</div>
+
+								{/* Right Column */}
+								<div className="space-y-8">
+									<h1 className="display-xl">
+										<span className="hero-title block">David</span>
+										<span className="hero-title block">Londoño</span>
+									</h1>
+									<p className="body-lg max-w-lg hero-description">
+										{t.hero.description}
+									</p>
+								</div>
 							</div>
 
-							{/* Right Column */}
-							<div className="space-y-8">
-								<h1 className="display-xl">
-									David
-									<br />
-									Londoño
-								</h1>
-								<p className="body-lg max-w-lg">
-									{t.hero.description}
-								</p>
+							{/* Scroll indicator */}
+							<div className="mt-24 flex items-center gap-4 scroll-indicator">
+								<span className="body-sm">{t.hero.scroll}</span>
+								<div className="w-px h-12 bg-[var(--color-border)]"></div>
 							</div>
 						</div>
-
-						{/* Scroll indicator */}
-						<div className="mt-24 flex items-center gap-4">
-							<span className="body-sm">{t.hero.scroll}</span>
-							<div className="w-px h-12 bg-[var(--color-border)]"></div>
-						</div>
-					</div>
-				</section>
+					</section>
+				</AnimatedHero>
 
 				{/* Marquee */}
 				<div className="marquee-editorial my-12">
@@ -190,14 +199,14 @@ export default function Home() {
 				{/* Services Section */}
 				<section id="servicios" className="section">
 					<div className="container-editorial">
-						<div
-							ref={addToRefs}
-							className="reveal grid-editorial items-start"
-						>
+						<RevealOnScroll className="grid-editorial items-start">
 							{/* Left */}
 							<div className="sticky top-32">
 								<p className="body-sm mb-4">{t.services.title}</p>
-								<h2 className="display-md" style={{ whiteSpace: 'pre-line' }}>
+								<h2
+									className="display-md"
+									style={{ whiteSpace: "pre-line" }}
+								>
 									{t.services.subtitle}
 								</h2>
 							</div>
@@ -205,78 +214,74 @@ export default function Home() {
 							{/* Right */}
 							<div>
 								{t.services.items.map((service, i) => (
-									<div
-										key={i}
-										ref={addToRefs}
-										className={`reveal delay-${i + 1} card-minimal`}
-									>
-										<div className="flex justify-between items-start mb-4">
-											<span className="number-indicator">
-												{String(i + 1).padStart(2, '0')}
-											</span>
-											<span className="body-sm">{t.services.label}</span>
+									<CardAnimation key={i} delay={i * 0.15}>
+										<div className="card-minimal">
+											<div className="flex justify-between items-start mb-4">
+												<span className="number-indicator">
+													{String(i + 1).padStart(2, "0")}
+												</span>
+												<span className="body-sm">
+													{t.services.label}
+												</span>
+											</div>
+											<h3 className="display-md mb-4">
+												{service.title}
+											</h3>
+											<p className="text-[var(--color-text-light)] max-w-md">
+												{service.desc}
+											</p>
 										</div>
-										<h3 className="display-md mb-4">
-											{service.title}
-										</h3>
-										<p className="text-[var(--color-text-light)] max-w-md">
-											{service.desc}
-										</p>
-									</div>
+									</CardAnimation>
 								))}
 							</div>
-						</div>
+						</RevealOnScroll>
 					</div>
 				</section>
 
 				{/* About Section */}
 				<section className="section bg-[var(--color-bg-alt)]">
 					<div className="container-editorial">
-						<div
-							ref={addToRefs}
-							className="reveal grid-asymmetric items-center"
+						<RevealOnScroll
+							className="grid-asymmetric items-center"
+							stagger={true}
 						>
 							{/* Left - Big text */}
 							<div>
 								<p className="body-sm mb-6">{t.about.label}</p>
 								<h2 className="display-lg mb-8">
-									{t.about.title}
+									<SplitTextAnimation triggerOnScroll={true}>
+										{t.about.title}
+									</SplitTextAnimation>
 								</h2>
-								<p className="body-lg">
-									{t.about.description}
-								</p>
+								<p className="body-lg">{t.about.description}</p>
 							</div>
 
 							{/* Right - Skills */}
 							<div className="space-y-0">
 								<p className="body-sm mb-6">{t.about.skillsTitle}</p>
 								{t.about.skills.map((skill, i) => (
-									<div key={i} className="skill-item">
+									<div key={i} className="skill-item reveal-item">
 										<span className="font-serif">{skill.name}</span>
 										<span className="skill-dots"></span>
 										<span className="body-sm">{skill.years}</span>
 									</div>
 								))}
 							</div>
-						</div>
+						</RevealOnScroll>
 					</div>
 				</section>
 
 				{/* Projects Section */}
 				<section id="proyectos" className="section">
 					<div className="container-editorial">
-						<div ref={addToRefs} className="reveal mb-16">
+						<RevealOnScroll className="mb-16">
 							<p className="body-sm mb-4">{t.projects.label}</p>
 							<h2 className="display-lg">{t.projects.title}</h2>
-						</div>
+						</RevealOnScroll>
 
 						<div className="space-y-0">
 							{t.projects.items.map((project, i) => (
-								<div
-									key={i}
-									ref={addToRefs}
-									className={`reveal delay-${i + 1}`}
-								>
+								<CardAnimation key={i} delay={i * 0.1}>
 									<a
 										href="#"
 										className="group block py-8 md:py-12 border-b border-[var(--color-border)] transition-all hover:pl-4"
@@ -284,7 +289,7 @@ export default function Home() {
 										<div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
 											<div className="flex items-baseline gap-6">
 												<span className="number-indicator">
-													{String(i + 1).padStart(2, '0')}
+													{String(i + 1).padStart(2, "0")}
 												</span>
 												<h3 className="display-md group-hover:text-[var(--color-accent)] transition-colors">
 													{project.title}
@@ -309,11 +314,11 @@ export default function Home() {
 											</div>
 										</div>
 									</a>
-								</div>
+								</CardAnimation>
 							))}
 						</div>
 
-						<div ref={addToRefs} className="reveal mt-12">
+						<RevealOnScroll className="mt-12">
 							<a
 								href="https://github.com/davidlondonor"
 								target="_blank"
@@ -330,7 +335,7 @@ export default function Home() {
 									<path d="M7 17L17 7M17 7H7M17 7V17" />
 								</svg>
 							</a>
-						</div>
+						</RevealOnScroll>
 					</div>
 				</section>
 
@@ -340,7 +345,7 @@ export default function Home() {
 					className="section bg-[var(--color-text)] text-[var(--color-bg)]"
 				>
 					<div className="container-editorial">
-						<div ref={addToRefs} className="reveal max-w-2xl mx-auto">
+						<RevealOnScroll className="max-w-2xl mx-auto">
 							<div className="text-center mb-12">
 								<p className="body-sm mb-6 text-[var(--color-bg)]/60">
 									{t.contact.label}
@@ -414,7 +419,9 @@ export default function Home() {
 									disabled={isSubmitting}
 									className="w-full px-8 py-4 bg-[var(--color-bg)] text-[var(--color-text)] border border-[var(--color-bg)] hover:bg-transparent hover:text-[var(--color-bg)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
 								>
-									{isSubmitting ? t.contact.form.sending : t.contact.form.submit}
+									{isSubmitting
+										? t.contact.form.sending
+										: t.contact.form.submit}
 								</button>
 
 								{formStatus === "success" && (
@@ -429,7 +436,7 @@ export default function Home() {
 									</p>
 								)}
 							</form>
-						</div>
+						</RevealOnScroll>
 					</div>
 				</section>
 
