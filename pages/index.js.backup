@@ -150,50 +150,50 @@ export default function Home() {
 
 						{/* Mobile Menu Button */}
 						<button
-							className="md:hidden flex flex-col gap-1.5 w-8 h-8 justify-center items-center relative z-[60]"
+							className="md:hidden flex flex-col gap-1.5 w-8 h-8 justify-center items-center"
 							onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
 							aria-label="Toggle menu"
 						>
-							<span className={`block h-[2px] transition-all duration-300 ${isMobileMenuOpen ? 'w-6 rotate-45 translate-y-2 bg-white' : 'w-8 bg-black'}`}></span>
-							<span className={`block h-[2px] transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0 bg-white' : 'w-6 opacity-100 bg-black'}`}></span>
-							<span className={`block h-[2px] transition-all duration-300 ${isMobileMenuOpen ? 'w-6 -rotate-45 -translate-y-2 bg-white' : 'w-8 bg-black'}`}></span>
-					</button>
+							<span className={`block h-[2px] transition-all duration-300 ${isMobileMenuOpen ? 'w-6 rotate-45 translate-y-2 bg-[#fafaf9]' : 'w-8 bg-[#1c1917]'} transition-all duration-300 ${isMobileMenuOpen ? 'w-6 rotate-45 translate-y-2' : 'w-8'}`}></span>
+							<span className={`block h-[2px] bg-[var(--color-text)] transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : 'w-6 opacity-100'}`}></span>
+							<span className={`block h-[2px] bg-[var(--color-text)] transition-all duration-300 ${isMobileMenuOpen ? 'w-6 -rotate-45 -translate-y-2' : 'w-8'}`}></span>
+						</button>
 					</div>
 
 					{/* Mobile Menu Overlay */}
-					<div className={`md:hidden fixed inset-0 bg-[#1c1917] z-[50] transition-all duration-500 ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+					<div className={`md:hidden fixed inset-0 bg-[#1c1917] transition-all duration-500 ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} style={{ top: '0' }}>
 						<div className="container-editorial h-full flex flex-col justify-center items-center gap-8">
 							<a
 								href="#inicio"
-								className="text-2xl font-serif text-[#fafaf9] hover:text-[var(--color-accent)] transition-colors"
+								className="text-3xl font-serif text-[#fafaf9] hover:text-[var(--color-accent)] transition-colors"
 								onClick={() => setIsMobileMenuOpen(false)}
 							>
 								{t.nav.home}
 							</a>
 							<a
 								href="#servicios"
-								className="text-2xl font-serif text-[#fafaf9] hover:text-[var(--color-accent)] transition-colors"
+								className="text-3xl font-serif text-[#fafaf9] hover:text-[var(--color-accent)] transition-colors"
 								onClick={() => setIsMobileMenuOpen(false)}
 							>
 								{t.nav.services}
 							</a>
 							<a
 								href="/portfolio"
-								className="text-2xl font-serif text-[#fafaf9] hover:text-[var(--color-accent)] transition-colors"
+								className="text-3xl font-serif text-[#fafaf9] hover:text-[var(--color-accent)] transition-colors"
 								onClick={() => setIsMobileMenuOpen(false)}
 							>
 								{t.nav.portfolio}
 							</a>
 							<a
 								href="#proyectos"
-								className="text-2xl font-serif text-[#fafaf9] hover:text-[var(--color-accent)] transition-colors"
+								className="text-3xl font-serif text-[#fafaf9] hover:text-[var(--color-accent)] transition-colors"
 								onClick={() => setIsMobileMenuOpen(false)}
 							>
 								{t.nav.projects}
 							</a>
 							<a
 								href="#contacto"
-								className="text-2xl font-serif text-[#fafaf9] hover:text-[var(--color-accent)] transition-colors"
+								className="text-3xl font-serif text-[#fafaf9] hover:text-[var(--color-accent)] transition-colors"
 								onClick={() => setIsMobileMenuOpen(false)}
 							>
 								{t.nav.contact}

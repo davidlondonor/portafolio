@@ -9,6 +9,7 @@ export default function Portfolio({
 	const { language, toggleLanguage, t } = useLanguage();
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
+	const [showPassword, setShowPassword] = useState(false);
 	const isAuthenticated = initialAuth === true;
 	const portfolioProjects = initialProjects || [];
 
@@ -50,7 +51,7 @@ export default function Portfolio({
 		return (
 			<>
 				<Head>
-					<title>{t.portfolio.title} | David Londoño</title>
+					<title>{`${t.portfolio.title} | David Londoño`}</title>
 					<meta name="robots" content="noindex, nofollow" />
 				</Head>
 
@@ -71,15 +72,51 @@ export default function Portfolio({
 								>
 									{t.portfolio.password}
 								</label>
-								<input
-									type="password"
-									id="password"
-									value={password}
-									onChange={(e) => setPassword(e.target.value)}
-									className="w-full px-4 py-3 bg-[var(--color-bg-alt)] border border-[var(--color-border)] rounded-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors"
-									placeholder={t.portfolio.passwordPlaceholder}
-									autoFocus
-								/>
+								<div className="relative">
+									<input
+										type={showPassword ? "text" : "password"}
+										id="password"
+										value={password}
+										onChange={(e) => setPassword(e.target.value)}
+										className="w-full px-4 py-3 pr-12 bg-[var(--color-bg-alt)] border border-[var(--color-border)] rounded-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors"
+										placeholder={t.portfolio.passwordPlaceholder}
+										autoFocus
+									/>
+									<button
+										type="button"
+										onClick={() => setShowPassword(!showPassword)}
+										className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-light)] hover:text-[var(--color-text)] transition-colors"
+										title={
+											showPassword
+												? "Hide password"
+												: "Show password"
+										}
+									>
+										{showPassword ? (
+											<svg
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												strokeWidth="2"
+												className="w-5 h-5"
+											>
+												<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+												<circle cx="12" cy="12" r="3" />
+											</svg>
+										) : (
+											<svg
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												strokeWidth="2"
+												className="w-5 h-5"
+											>
+												<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+												<line x1="1" y1="1" x2="23" y2="23" />
+											</svg>
+										)}
+									</button>
+								</div>
 								{error && (
 									<p className="mt-2 text-sm text-red-500">{error}</p>
 								)}
@@ -127,7 +164,7 @@ export default function Portfolio({
 	return (
 		<>
 			<Head>
-				<title>{t.portfolio.title} | David Londoño</title>
+				<title>{`${t.portfolio.title} | David Londoño`}</title>
 				<meta name="robots" content="noindex, nofollow" />
 			</Head>
 
@@ -157,7 +194,7 @@ export default function Portfolio({
 				</nav>
 
 				{/* Header */}
-				<section className="min-h-[60vh] flex items-center pt-24">
+				<section className="min-h-[40vh] flex items-center pt-24">
 					<div className="container-editorial">
 						<div className="grid-editorial items-end">
 							<div className="space-y-6">
@@ -190,40 +227,46 @@ export default function Portfolio({
 							<h2 className="display-lg">{t.portfolio.exclusiveWork}</h2>
 						</div>
 
-						<div className="space-y-12">
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 							{portfolioProjects.map((project, i) => (
 								<div
 									key={i}
-									className="card-minimal p-8 hover:border-[var(--color-accent)] transition-colors"
+									className="card-minimal overflow-hidden hover:border-[var(--color-accent)] transition-colors group"
 								>
-									<div className="flex items-start justify-between mb-6">
-										<span className="number-indicator">
+									{/* Image */}
+									<div className="relative w-full aspect-[4/3] bg-[var(--color-bg-alt)] overflow-hidden rounded-[1.5rem]">
+										<img
+											src={project.image}
+											alt={project.title}
+											className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+										/>
+										<span className="absolute top-4 left-4 number-indicator bg-[var(--color-bg)]/90 backdrop-blur-sm px-3 py-1">
 											{project.num}
-										</span>
-										<span className="body-sm text-[var(--color-text-light)]">
-											{project.year}
 										</span>
 									</div>
 
-									<h3 className="display-md mb-3">{project.title}</h3>
+									{/* Content */}
+									<div className="p-6">
+										<h3 className="display-sm mb-2">{project.title}</h3>
 
-									<p className="body-sm text-[var(--color-accent)] mb-4">
-										{project.client}
-									</p>
+										<p className="body-sm text-[var(--color-accent)] mb-3">
+											{project.client}
+										</p>
 
-									<p className="text-[var(--color-text-light)] mb-6 max-w-2xl">
-										{project.description}
-									</p>
+										<p className="text-[var(--color-text-light)] mb-4 text-sm">
+											{project.description}
+										</p>
 
-									<div className="flex flex-wrap gap-3">
-										{project.tech.map((tech, j) => (
-											<span
-												key={j}
-												className="px-3 py-1 text-sm border border-[var(--color-border)] rounded-full"
-											>
-												{tech}
-											</span>
-										))}
+										<div className="flex flex-wrap gap-2">
+											{project.tech.map((tech, j) => (
+												<span
+													key={j}
+													className="px-3 py-1 text-xs border border-[var(--color-border)] rounded-full"
+												>
+													{tech}
+												</span>
+											))}
+										</div>
 									</div>
 								</div>
 							))}
@@ -289,27 +332,40 @@ export async function getServerSideProps(context) {
 				title: "Proyecto Confidencial A",
 				client: "Cliente Enterprise",
 				year: "2025",
-				tech: ["React", "Node.js", "PostgreSQL"],
+				tech: ["UI", "Figma", "UX"],
 				description:
 					"Plataforma empresarial completa con dashboard de analytics en tiempo real.",
+				image: "https://images.unsplash.com/photo-1559028012-481c04fa702d?w=800&q=80",
 			},
 			{
 				num: "02",
 				title: "Proyecto Confidencial B",
 				client: "Startup Fintech",
 				year: "2025",
-				tech: ["Next.js", "TypeScript", "Stripe"],
+				tech: ["UI", "Figma", "UX"],
 				description:
 					"Sistema de pagos y gestión financiera con integraciones bancarias.",
+				image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80",
 			},
 			{
 				num: "03",
 				title: "Proyecto Confidencial C",
 				client: "Agencia Digital",
 				year: "2026",
-				tech: ["Vue.js", "Firebase", "TailwindCSS"],
+				tech: ["UI", "Figma", "UX"],
 				description:
 					"Aplicación web para gestión de campañas y métricas de marketing.",
+				image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80",
+			},
+			{
+				num: "04",
+				title: "Proyecto Confidencial D",
+				client: "E-commerce Global",
+				year: "2026",
+				tech: ["UI", "Figma", "UX"],
+				description:
+					"Experiencia de compra rediseñada con enfoque mobile-first y personalización.",
+				image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
 			},
 		];
 	}
