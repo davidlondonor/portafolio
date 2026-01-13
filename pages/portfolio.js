@@ -234,7 +234,7 @@ export default function Portfolio({
 									className="card-minimal overflow-hidden hover:border-[var(--color-accent)] transition-colors group"
 								>
 									{/* Image */}
-									<div className="relative w-full aspect-[4/3] bg-[var(--color-bg-alt)] overflow-hidden">
+									<div className="relative w-full aspect-[4/3] bg-[var(--color-bg-alt)] overflow-hidden rounded-[1.5rem]">
 										<img
 											src={project.image}
 											alt={project.title}

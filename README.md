@@ -33,25 +33,63 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-## Private portfolio setup
+## Security
 
-The private portfolio uses server-side validation. You must provide two environment variables locally before testing:
+This portfolio includes a password-protected section with enterprise-grade security:
 
-- `PORTFOLIO_PASSWORD` — password users submit to access the private portfolio
-- `PORTFOLIO_AUTH_SECRET` — a long secret used to sign authentication tokens
+- **Bcrypt password hashing** (salt rounds: 10)
+- **Rate limiting** (5 attempts / 15 minutes per IP)
+- **Access logging** with IP sanitization
+- **JWT authentication** with HttpOnly cookies
+- **Timing attack protection**
+- **Security HTTP headers**
 
-Create a `.env.local` at the project root (you can copy `.env.example`) and restart the dev server after setting values:
+### Setup Authentication
+
+1. Generate password hash:
 
 ```bash
-cp .env.example .env.local
-# Edit .env.local and set PORTFOLIO_PASSWORD and PORTFOLIO_AUTH_SECRET
-npm run dev
+node scripts/generate-password-hash.js YOUR_PASSWORD
 ```
 
-If you see `Server not configured` when submitting the password, it means one of the required env vars is missing.
+2. Add to `.env.local`:
+
+```bash
+PORTFOLIO_PASSWORD_HASH=$2b$10$...generated_hash...
+PORTFOLIO_AUTH_SECRET=...long_random_secret...
+```
 
 To generate a random secret (macOS / Linux):
 
 ```bash
 node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 ```
+
+3. Start development server:
+
+```bash
+npm run dev
+```
+
+### View Access Logs
+
+```bash
+# View recent login attempts
+node scripts/view-logs.js
+
+# View last 50 entries
+node scripts/view-logs.js --limit=50
+
+# View only failed attempts
+node scripts/view-logs.js --failed
+```
+
+### Full Documentation
+
+See complete security documentation in [/docs/SECURITY.md](./docs/SECURITY.md) including:
+
+- Changing passwords
+- Rate limiting configuration
+- Production deployment
+- Troubleshooting
+- Scalability options

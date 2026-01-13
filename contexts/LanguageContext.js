@@ -106,7 +106,7 @@ export const translations = {
 			privateTitle: "Portfolio",
 			privateDescription:
 				"Proyectos confidenciales y trabajos exclusivos realizados para clientes seleccionados.",
-			confidentialProjects: "Proyectos Seleccionados",
+			confidentialProjects: "Proyectos",
 			exclusiveWork: "Trabajos Destacados",
 			footerPrivate: "2026 David Londoño",
 		},
@@ -214,7 +214,7 @@ export const translations = {
 			privateTitle: "Portfolio",
 			privateDescription:
 				"Confidential projects and exclusive work for selected clients.",
-			confidentialProjects: "Selected Projects",
+			confidentialProjects: "Projects",
 			exclusiveWork: "Featured Work",
 			footerPrivate: "2026 David Londoño",
 		},
