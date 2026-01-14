@@ -1,6 +1,8 @@
 import Head from "next/head";
-import { useState } from "react";
+import Image from "next/image";
+import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
+import gsap from "gsap";
 
 export default function Portfolio({
 	isAuthenticated: initialAuth,
@@ -10,12 +12,56 @@ export default function Portfolio({
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+	const [attemptsRemaining, setAttemptsRemaining] = useState(null);
+	const [retryAfter, setRetryAfter] = useState(null);
 	const isAuthenticated = initialAuth === true;
 	const portfolioProjects = initialProjects || [];
+
+	const loginFormRef = useRef(null);
+	const projectsRef = useRef([]);
+	const headerRef = useRef(null);
+
+	// Animación de entrada para el formulario de login
+	useEffect(() => {
+		if (!isAuthenticated && loginFormRef.current) {
+			gsap.fromTo(
+				loginFormRef.current,
+				{ opacity: 0, y: 30 },
+				{ opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }
+			);
+		}
+	}, [isAuthenticated]);
+
+	// Animación de entrada para proyectos
+	useEffect(() => {
+		if (isAuthenticated && projectsRef.current.length > 0) {
+			gsap.fromTo(
+				headerRef.current,
+				{ opacity: 0, y: 30 },
+				{ opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }
+			);
+
+			gsap.fromTo(
+				projectsRef.current,
+				{ opacity: 0, y: 50, scale: 0.95 },
+				{
+					opacity: 1,
+					y: 0,
+					scale: 1,
+					duration: 0.6,
+					stagger: 0.15,
+					ease: "power3.out",
+					delay: 0.3
+				}
+			);
+		}
+	}, [isAuthenticated, portfolioProjects.length]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setError("");
+		setIsLoading(true);
 
 		try {
 			const res = await fetch("/api/portfolio-auth", {
@@ -31,10 +77,23 @@ export default function Portfolio({
 				const data = await res.json();
 				setError(data?.error || t.portfolio.errorPassword);
 				setPassword("");
+
+				// Mostrar intentos restantes si están disponibles
+				if (data?.attemptsRemaining !== undefined) {
+					setAttemptsRemaining(data.attemptsRemaining);
+				}
+
+				// Mostrar tiempo de espera si hay rate limit
+				if (data?.retryAfter) {
+					setRetryAfter(data.retryAfter);
+				}
+
+				setIsLoading(false);
 			}
 		} catch (err) {
 			setError(t.portfolio.errorPassword);
 			setPassword("");
+			setIsLoading(false);
 		}
 	};
 
@@ -56,7 +115,7 @@ export default function Portfolio({
 				</Head>
 
 				<div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)]">
-					<div className="w-full max-w-md px-6">
+					<div ref={loginFormRef} className="w-full max-w-md px-6">
 						<div className="text-center mb-12">
 							<h1 className="display-md mb-4">{t.portfolio.title}</h1>
 							<p className="body-lg text-[var(--color-text-light)]">
@@ -118,23 +177,63 @@ export default function Portfolio({
 									</button>
 								</div>
 								{error && (
-									<p className="mt-2 text-sm text-red-500">{error}</p>
+									<div className="mt-2 space-y-1">
+										<p className="text-sm text-red-500">{error}</p>
+										{attemptsRemaining !== null && attemptsRemaining > 0 && (
+											<p className="text-xs text-[var(--color-text-light)]">
+												{attemptsRemaining} {attemptsRemaining === 1 ? 'intento restante' : 'intentos restantes'}
+											</p>
+										)}
+										{retryAfter && (
+											<p className="text-xs text-amber-500">
+												Espera {Math.ceil(retryAfter / 1000 / 60)} minutos antes de intentar nuevamente
+											</p>
+										)}
+									</div>
 								)}
 							</div>
 
 							<button
 								type="submit"
-								className="w-full btn-minimal justify-center"
+								disabled={isLoading || retryAfter}
+								className="w-full btn-minimal justify-center disabled:opacity-50 disabled:cursor-not-allowed"
 							>
-								<span>{t.portfolio.access}</span>
-								<svg
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									strokeWidth="2"
-								>
-									<path d="M7 17L17 7M17 7H7M17 7V17" />
-								</svg>
+								{isLoading ? (
+									<>
+										<span>Verificando...</span>
+										<svg
+											className="animate-spin h-5 w-5"
+											viewBox="0 0 24 24"
+											fill="none"
+										>
+											<circle
+												className="opacity-25"
+												cx="12"
+												cy="12"
+												r="10"
+												stroke="currentColor"
+												strokeWidth="4"
+											/>
+											<path
+												className="opacity-75"
+												fill="currentColor"
+												d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+											/>
+										</svg>
+									</>
+								) : (
+									<>
+										<span>{t.portfolio.access}</span>
+										<svg
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											strokeWidth="2"
+										>
+											<path d="M7 17L17 7M17 7H7M17 7V17" />
+										</svg>
+									</>
+								)}
 							</button>
 						</form>
 
@@ -194,7 +293,7 @@ export default function Portfolio({
 				</nav>
 
 				{/* Header */}
-				<section className="min-h-[40vh] flex items-center pt-24">
+				<section ref={headerRef} className="min-h-[40vh] flex items-center pt-24">
 					<div className="container-editorial">
 						<div className="grid-editorial items-end">
 							<div className="space-y-6">
@@ -235,10 +334,13 @@ export default function Portfolio({
 								>
 									{/* Image */}
 									<div className="relative w-full aspect-[4/3] bg-[var(--color-bg-alt)] overflow-hidden rounded-[1.5rem]">
-										<img
+										<Image
 											src={project.image}
-											alt={project.title}
-											className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+											alt={`${project.title} - ${project.description}`}
+											fill
+											sizes="(max-width: 768px) 100vw, 50vw"
+											className="object-cover transition-transform duration-500 group-hover:scale-105"
+											loading="lazy"
 										/>
 										<span className="absolute top-4 left-4 number-indicator bg-[var(--color-bg)]/90 backdrop-blur-sm px-3 py-1">
 											{project.num}
