@@ -493,7 +493,7 @@ export default function Home() {
 								<button
 									type="submit"
 									disabled={isSubmitting}
-									className="w-full px-8 py-4 bg-[var(--color-bg)] text-[var(--color-text)] border border-[var(--color-bg)] hover:bg-transparent hover:text-[var(--color-bg)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+									className="w-full px-8 py-4 bg-[var(--color-bg)] text-[var(--color-text)] border-2 border-[var(--color-bg)] hover:bg-[var(--color-accent)] hover:text-[var(--color-bg)] hover:border-[var(--color-accent)] hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
 								>
 									{isSubmitting
 										? t.contact.form.sending
