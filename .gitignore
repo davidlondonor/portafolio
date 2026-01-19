@@ -39,3 +39,6 @@ yarn-error.log*
 # access logs (contiene IPs y datos sensibles)
 /logs/*.json
 /logs/*-backup-*.json
+
+# backups
+/backup-design-*
