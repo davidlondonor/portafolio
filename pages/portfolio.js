@@ -208,7 +208,7 @@ export async function getServerSideProps(context) {
 				tech: ["UI", "Figma", "UX"],
 				description:
 					"Plataforma empresarial completa con dashboard de analytics en tiempo real.",
-				image: "https://images.unsplash.com/photo-1559028012-481c04fa702d?w=800&q=80",
+				image: "/images/proyecto1.png",
 			},
 			{
 				num: "02",
@@ -218,7 +218,7 @@ export async function getServerSideProps(context) {
 				tech: ["UI", "Figma", "UX"],
 				description:
 					"Sistema de pagos y gestión financiera con integraciones bancarias.",
-				image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80",
+				image: "/images/proyecto2.png",
 			},
 			{
 				num: "03",
@@ -228,7 +228,7 @@ export async function getServerSideProps(context) {
 				tech: ["UI", "Figma", "UX"],
 				description:
 					"Aplicación web para gestión de campañas y métricas de marketing.",
-				image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80",
+				image: "/images/proyecto3.png",
 			},
 			{
 				num: "04",
@@ -238,7 +238,7 @@ export async function getServerSideProps(context) {
 				tech: ["UI", "Figma", "UX"],
 				description:
 					"Experiencia de compra rediseñada con enfoque mobile-first y personalización.",
-				image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+				image: "/images/proyecto4.png",
 			},
 		];
 	}
