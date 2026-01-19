@@ -5,7 +5,7 @@ import AnimatedHero from "../components/AnimatedHero";
 import RevealOnScroll from "../components/RevealOnScroll";
 import CardAnimation from "../components/CardAnimation";
 import SplitTextAnimation from "../components/SplitTextAnimation";
-import CloudsBackground from "../components/CloudsBackground";
+import { ShaderAnimation } from "@/components/ui/shader-animation";
 
 export default function Home() {
 	const { language, toggleLanguage, t } = useLanguage();
@@ -111,37 +111,39 @@ export default function Home() {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
-			{/* Animated Clouds Background */}
-			<CloudsBackground />
+			{/* Animated Shader Background */}
+			<div className="fixed inset-0 z-0">
+				<ShaderAnimation />
+			</div>
 
 			<div className="page-transition relative z-10">
 				{/* Navigation */}
-				<nav className="fixed top-8 left-0 right-0 z-50 bg-[var(--color-bg)]/90 backdrop-blur-sm">
+				<nav className="fixed top-8 left-0 right-0 z-50 bg-black/30 backdrop-blur-sm">
 					<div className="container-editorial py-6 flex justify-between items-center">
-						<a href="#" className="font-serif text-xl">
+						<a href="#" className="font-serif text-xl text-white">
 							DL
 						</a>
 
 						{/* Desktop Menu */}
 						<div className="hidden md:flex gap-8">
-							<a href="#inicio" className="nav-link">
+							<a href="#inicio" className="text-white/80 hover:text-white transition-colors">
 								{t.nav.home}
 							</a>
-							<a href="#servicios" className="nav-link">
+							<a href="#servicios" className="text-white/80 hover:text-white transition-colors">
 								{t.nav.services}
 							</a>
-							<a href="/portfolio" className="nav-link">
+							<a href="/portfolio" className="text-white/80 hover:text-white transition-colors">
 								{t.nav.portfolio}
 							</a>
-							<a href="#proyectos" className="nav-link">
+							<a href="#proyectos" className="text-white/80 hover:text-white transition-colors">
 								{t.nav.projects}
 							</a>
-							<a href="#contacto" className="nav-link">
+							<a href="#contacto" className="text-white/80 hover:text-white transition-colors">
 								{t.nav.contact}
 							</a>
 							<button
 								onClick={toggleLanguage}
-								className="nav-link text-sm uppercase"
+								className="text-white/80 hover:text-white transition-colors text-sm uppercase"
 								title="Change language"
 							>
 								{language === "es" ? "EN" : "ES"}
@@ -154,9 +156,9 @@ export default function Home() {
 							onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
 							aria-label="Toggle menu"
 						>
-							<span className={`block h-[2px] transition-all duration-300 ${isMobileMenuOpen ? 'w-6 rotate-45 translate-y-2 bg-white' : 'w-8 bg-black'}`}></span>
-							<span className={`block h-[2px] transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0 bg-white' : 'w-6 opacity-100 bg-black'}`}></span>
-							<span className={`block h-[2px] transition-all duration-300 ${isMobileMenuOpen ? 'w-6 -rotate-45 -translate-y-2 bg-white' : 'w-8 bg-black'}`}></span>
+							<span className={`block h-[2px] transition-all duration-300 ${isMobileMenuOpen ? 'w-6 rotate-45 translate-y-2 bg-white' : 'w-8 bg-white'}`}></span>
+							<span className={`block h-[2px] transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0 bg-white' : 'w-6 opacity-100 bg-white'}`}></span>
+							<span className={`block h-[2px] transition-all duration-300 ${isMobileMenuOpen ? 'w-6 -rotate-45 -translate-y-2 bg-white' : 'w-8 bg-white'}`}></span>
 					</button>
 					</div>
 
@@ -221,17 +223,17 @@ export default function Home() {
 							<div className="grid-editorial items-end">
 								{/* Left Column */}
 								<div className="space-y-6">
-									<p className="body-sm hero-title">{t.hero.role}</p>
-									<div className="accent-line hero-accent-line"></div>
+									<p className="body-sm hero-title text-white/70">{t.hero.role}</p>
+									<div className="accent-line hero-accent-line bg-white/50"></div>
 								</div>
 
 								{/* Right Column */}
 								<div className="space-y-8">
-									<h1 className="display-xl">
+									<h1 className="display-xl text-white">
 										<span className="hero-title block">David</span>
 										<span className="hero-title block">Londoño</span>
 									</h1>
-									<p className="body-lg max-w-lg hero-description">
+									<p className="body-lg max-w-lg hero-description text-white/70">
 										{t.hero.description}
 									</p>
 								</div>
@@ -239,8 +241,8 @@ export default function Home() {
 
 							{/* Scroll indicator */}
 							<div className="mt-24 flex items-center gap-4 scroll-indicator">
-								<span className="body-sm">{t.hero.scroll}</span>
-								<div className="w-px h-12 bg-[var(--color-border)]"></div>
+								<span className="body-sm text-white/60">{t.hero.scroll}</span>
+								<div className="w-px h-12 bg-white/30"></div>
 							</div>
 						</div>
 					</section>
@@ -262,7 +264,7 @@ export default function Home() {
 								].map((tech, j) => (
 									<span
 										key={j}
-										className="mx-12 text-2xl md:text-4xl font-serif text-[var(--color-text-light)]"
+										className="mx-12 text-2xl md:text-4xl font-serif text-white/50"
 									>
 										{tech}
 									</span>
@@ -273,14 +275,14 @@ export default function Home() {
 				</div>
 
 				{/* Services Section */}
-				<section id="servicios" className="section">
+				<section id="servicios" className="section bg-black/50 backdrop-blur-sm">
 					<div className="container-editorial">
 						<RevealOnScroll className="grid-editorial items-start">
 							{/* Left */}
 							<div className="sticky top-32">
-								<p className="body-sm mb-4">{t.services.title}</p>
+								<p className="body-sm mb-4 text-white/60">{t.services.title}</p>
 								<h2
-									className="display-md"
+									className="display-md text-white"
 									style={{ whiteSpace: "pre-line" }}
 								>
 									{t.services.subtitle}
@@ -291,19 +293,19 @@ export default function Home() {
 							<div>
 								{t.services.items.map((service, i) => (
 									<CardAnimation key={i} delay={i * 0.15}>
-										<div className="card-minimal">
+										<div className="card-minimal border-white/10">
 											<div className="flex justify-between items-start mb-4">
-												<span className="number-indicator">
+												<span className="number-indicator text-white/50">
 													{String(i + 1).padStart(2, "0")}
 												</span>
-												<span className="body-sm">
+												<span className="body-sm text-white/50">
 													{t.services.label}
 												</span>
 											</div>
-											<h3 className="display-md mb-4">
+											<h3 className="display-md mb-4 text-white">
 												{service.title}
 											</h3>
-											<p className="text-[var(--color-text-light)] max-w-md">
+											<p className="text-white/60 max-w-md">
 												{service.desc}
 											</p>
 										</div>
@@ -315,7 +317,7 @@ export default function Home() {
 				</section>
 
 				{/* About Section */}
-				<section className="section bg-[var(--color-bg-alt)]">
+				<section className="section bg-black/60 backdrop-blur-sm">
 					<div className="container-editorial">
 						<RevealOnScroll
 							className="grid-asymmetric items-center"
@@ -323,23 +325,23 @@ export default function Home() {
 						>
 							{/* Left - Big text */}
 							<div>
-								<p className="body-sm mb-6">{t.about.label}</p>
-								<h2 className="display-lg mb-8">
+								<p className="body-sm mb-6 text-white/60">{t.about.label}</p>
+								<h2 className="display-lg mb-8 text-white">
 									<SplitTextAnimation triggerOnScroll={true}>
 										{t.about.title}
 									</SplitTextAnimation>
 								</h2>
-								<p className="body-lg">{t.about.description}</p>
+								<p className="body-lg text-white/70">{t.about.description}</p>
 							</div>
 
 							{/* Right - Skills */}
 							<div className="space-y-0">
-								<p className="body-sm mb-6">{t.about.skillsTitle}</p>
+								<p className="body-sm mb-6 text-white/60">{t.about.skillsTitle}</p>
 								{t.about.skills.map((skill, i) => (
-									<div key={i} className="skill-item reveal-item">
-										<span className="font-serif">{skill.name}</span>
-										<span className="skill-dots"></span>
-										<span className="body-sm">{skill.years}</span>
+									<div key={i} className="skill-item reveal-item border-white/10">
+										<span className="font-serif text-white">{skill.name}</span>
+										<span className="skill-dots border-white/20"></span>
+										<span className="body-sm text-white/60">{skill.years}</span>
 									</div>
 								))}
 							</div>
@@ -348,11 +350,11 @@ export default function Home() {
 				</section>
 
 				{/* Projects Section */}
-				<section id="proyectos" className="section">
+				<section id="proyectos" className="section bg-black/50 backdrop-blur-sm">
 					<div className="container-editorial">
 						<RevealOnScroll className="mb-16">
-							<p className="body-sm mb-4">{t.projects.label}</p>
-							<h2 className="display-lg">{t.projects.title}</h2>
+							<p className="body-sm mb-4 text-white/60">{t.projects.label}</p>
+							<h2 className="display-lg text-white">{t.projects.title}</h2>
 						</RevealOnScroll>
 
 						<div className="space-y-0">
@@ -360,26 +362,26 @@ export default function Home() {
 								<CardAnimation key={i} delay={i * 0.1}>
 									<a
 										href="#"
-										className="group block py-8 md:py-12 border-b border-[var(--color-border)] transition-all hover:pl-4"
+										className="group block py-8 md:py-12 border-b border-white/10 transition-all hover:pl-4"
 									>
 										<div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
 											<div className="flex items-baseline gap-6">
-												<span className="number-indicator">
+												<span className="number-indicator text-white/50">
 													{String(i + 1).padStart(2, "0")}
 												</span>
-												<h3 className="display-md group-hover:text-[var(--color-accent)] transition-colors">
+												<h3 className="display-md text-white group-hover:text-cyan-400 transition-colors">
 													{project.title}
 												</h3>
 											</div>
 											<div className="flex items-center gap-8">
-												<span className="body-sm">
+												<span className="body-sm text-white/60">
 													{project.category}
 												</span>
-												<span className="body-sm">
+												<span className="body-sm text-white/60">
 													{project.year}
 												</span>
 												<svg
-													className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity"
+													className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity text-white"
 													viewBox="0 0 24 24"
 													fill="none"
 													stroke="currentColor"
@@ -399,7 +401,7 @@ export default function Home() {
 								href="https://github.com/davidlondonor"
 								target="_blank"
 								rel="noopener noreferrer"
-								className="btn-minimal"
+								className="inline-flex items-center gap-2 text-white border border-white/30 px-6 py-3 hover:bg-white hover:text-black transition-all"
 							>
 								<span>{t.projects.viewAll}</span>
 								<svg
@@ -407,6 +409,7 @@ export default function Home() {
 									fill="none"
 									stroke="currentColor"
 									strokeWidth="2"
+									className="w-5 h-5"
 								>
 									<path d="M7 17L17 7M17 7H7M17 7V17" />
 								</svg>
@@ -517,10 +520,10 @@ export default function Home() {
 				</section>
 
 				{/* Footer */}
-				<footer className="footer-editorial">
+				<footer className="py-12 bg-black/70 backdrop-blur-sm border-t border-white/10">
 					<div className="container-editorial">
 						<div className="flex flex-col md:flex-row justify-between items-center gap-6">
-							<p className="body-sm">{t.footer.copyright}</p>
+							<p className="body-sm text-white/60">{t.footer.copyright}</p>
 							<div className="flex gap-8">
 								{[
 									{
@@ -541,7 +544,7 @@ export default function Home() {
 										href={social.url}
 										target="_blank"
 										rel="noopener noreferrer"
-										className="nav-link link-underline"
+										className="text-white/60 hover:text-white transition-colors"
 									>
 										{social.name}
 									</a>
