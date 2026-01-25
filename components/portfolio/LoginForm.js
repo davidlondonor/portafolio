@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import gsap from "gsap";
+import Turnstile from "../Turnstile";
 
 export default function LoginForm({ onSubmit, t, language, toggleLanguage }) {
 	const [password, setPassword] = useState("");
@@ -8,7 +9,18 @@ export default function LoginForm({ onSubmit, t, language, toggleLanguage }) {
 	const [isLoading, setIsLoading] = useState(false);
 	const [attemptsRemaining, setAttemptsRemaining] = useState(null);
 	const [retryAfter, setRetryAfter] = useState(null);
+	const [turnstileToken, setTurnstileToken] = useState("");
+
+	const isDev = process.env.NODE_ENV === 'development';
 	const loginFormRef = useRef(null);
+
+	const handleTurnstileVerify = useCallback((token) => {
+		setTurnstileToken(token);
+	}, []);
+
+	const handleTurnstileExpire = useCallback(() => {
+		setTurnstileToken("");
+	}, []);
 
 	useEffect(() => {
 		if (loginFormRef.current) {
@@ -29,7 +41,7 @@ export default function LoginForm({ onSubmit, t, language, toggleLanguage }) {
 			const res = await fetch("/api/portfolio-auth", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ password }),
+				body: JSON.stringify({ password, turnstileToken }),
 			});
 
 			if (res.ok) {
@@ -47,11 +59,13 @@ export default function LoginForm({ onSubmit, t, language, toggleLanguage }) {
 					setRetryAfter(data.retryAfter);
 				}
 
+				setTurnstileToken("");
 				setIsLoading(false);
 			}
 		} catch (err) {
 			setError(t.portfolio.errorPassword);
 			setPassword("");
+			setTurnstileToken("");
 			setIsLoading(false);
 		}
 	};
@@ -136,9 +150,18 @@ export default function LoginForm({ onSubmit, t, language, toggleLanguage }) {
 						)}
 					</div>
 
+					{!isDev && (
+						<div className="flex justify-center">
+							<Turnstile
+								onVerify={handleTurnstileVerify}
+								onExpire={handleTurnstileExpire}
+							/>
+						</div>
+					)}
+
 					<button
 						type="submit"
-						disabled={isLoading || retryAfter}
+						disabled={isLoading || retryAfter || (!isDev && !turnstileToken)}
 						className="w-full btn-minimal justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-bg)] hover:border-[var(--color-accent)] hover:scale-105"
 					>
 						{isLoading ? (

@@ -1,11 +1,12 @@
 import Head from "next/head";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
 import AnimatedHero from "../components/AnimatedHero";
 import RevealOnScroll from "../components/RevealOnScroll";
 import CardAnimation from "../components/CardAnimation";
 import SplitTextAnimation from "../components/SplitTextAnimation";
 import { ShaderAnimation } from "@/components/ui/shader-animation";
+import Turnstile from "../components/Turnstile";
 
 export default function Home() {
 	const { language, toggleLanguage, t } = useLanguage();
@@ -18,6 +19,15 @@ export default function Home() {
 	const [formStatus, setFormStatus] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+	const [turnstileToken, setTurnstileToken] = useState("");
+
+	const handleTurnstileVerify = useCallback((token) => {
+		setTurnstileToken(token);
+	}, []);
+
+	const handleTurnstileExpire = useCallback(() => {
+		setTurnstileToken("");
+	}, []);
 
 	// Scroll reveal effect
 	useEffect(() => {
@@ -74,22 +84,23 @@ export default function Home() {
 		setFormStatus("");
 
 		try {
-			const response = await fetch("https://api.web3forms.com/submit", {
+			const response = await fetch("/api/contact", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
-					access_key: "823357c7-b029-4311-b1ca-0b6b07a58924",
 					name: formData.name,
 					email: formData.email,
 					message: formData.message,
+					turnstileToken,
 				}),
 			});
 
 			if (response.ok) {
 				setFormStatus("success");
 				setFormData({ name: "", email: "", message: "" });
+				setTurnstileToken("");
 			} else {
 				setFormStatus("error");
 			}
@@ -493,9 +504,16 @@ export default function Home() {
 									></textarea>
 								</div>
 
+								<div className="flex justify-center">
+									<Turnstile
+										onVerify={handleTurnstileVerify}
+										onExpire={handleTurnstileExpire}
+									/>
+								</div>
+
 								<button
 									type="submit"
-									disabled={isSubmitting}
+									disabled={isSubmitting || !turnstileToken}
 									className="w-full px-8 py-4 bg-[var(--color-bg)] text-[var(--color-text)] border-2 border-[var(--color-bg)] hover:bg-[var(--color-accent)] hover:text-[var(--color-bg)] hover:border-[var(--color-accent)] hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
 								>
 									{isSubmitting

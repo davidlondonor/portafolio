@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { verifyPassword, randomDelay } from "../../lib/security";
 import { checkRateLimit } from "../../lib/rate-limiter";
 import { logAccess } from "../../lib/access-logger";
+import { verifyTurnstileToken } from "../../lib/turnstile";
 
 export default async function handler(req, res) {
 	if (req.method !== "POST") {
@@ -29,7 +30,24 @@ export default async function handler(req, res) {
 	}
 
 	// === VALIDACIÓN DE INPUT ===
-	const { password } = req.body || {};
+	const { password, turnstileToken } = req.body || {};
+
+	// === TURNSTILE VERIFICATION ===
+	const isDev = process.env.NODE_ENV === 'development';
+
+	if (!isDev) {
+		const turnstileResult = await verifyTurnstileToken(turnstileToken, clientIp);
+		if (!turnstileResult.success && !turnstileResult.skipped) {
+			await logAccess({
+				ip: clientIp,
+				userAgent,
+				success: false,
+				reason: 'turnstile_verification_failed'
+			});
+			return res.status(400).json({ error: "Verification failed. Please try again." });
+		}
+	}
+
 	const PORTFOLIO_PASSWORD_HASH = process.env.PORTFOLIO_PASSWORD_HASH;
 	const PORTFOLIO_PASSWORD = process.env.PORTFOLIO_PASSWORD; // Fallback temporal
 	const PORTFOLIO_AUTH_SECRET = process.env.PORTFOLIO_AUTH_SECRET;

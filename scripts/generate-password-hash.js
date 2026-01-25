@@ -11,10 +11,13 @@ bcrypt.hash(password, saltRounds, (err, hash) => {
     process.exit(1);
   }
 
+  // Escapar $ para evitar interpolación de variables en .env
+  const escapedHash = hash.replace(/\$/g, '\\$');
+
   console.log('=== BCRYPT HASH GENERADO ===');
   console.log(hash);
-  console.log('\n📋 Copia este hash y actualiza tu .env.local:');
-  console.log(`PORTFOLIO_PASSWORD_HASH=${hash}`);
-  console.log('\n💡 Tip: Mantén PORTFOLIO_PASSWORD temporalmente para transición');
-  console.log('Una vez verificado que funciona, puedes remover PORTFOLIO_PASSWORD\n');
+  console.log('\n📋 Copia esta línea a tu .env.local ($ ya escapados):');
+  console.log(`PORTFOLIO_PASSWORD_HASH=${escapedHash}`);
+  console.log('\n⚠️  Los caracteres $ deben escaparse con \\ en archivos .env');
+  console.log('💡 Tip: Mantén PORTFOLIO_PASSWORD temporalmente para transición\n');
 });
