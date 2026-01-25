@@ -213,7 +213,7 @@ export const translations = {
 			privateContent: "My Projects",
 			privateTitle: "Portfolio",
 			privateDescription:
-				"Confidential projects and exclusive work for selected clients.",
+				"Projects and exclusive work for selected clients.",
 			confidentialProjects: "Projects",
 			exclusiveWork: "Featured Work",
 			footerPrivate: "2026 David Londoño",
