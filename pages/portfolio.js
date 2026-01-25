@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
 import gsap from "gsap";
 import LoginForm from "../components/portfolio/LoginForm";
@@ -12,9 +12,22 @@ export default function Portfolio({
 	const { language, toggleLanguage, t } = useLanguage();
 	const isAuthenticated = initialAuth === true;
 	const portfolioProjects = initialProjects || [];
+	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
 	const projectsRef = useRef([]);
 	const headerRef = useRef(null);
+
+	// Block scroll when mobile menu is open
+	useEffect(() => {
+		if (isMobileMenuOpen) {
+			document.body.style.overflow = 'hidden';
+		} else {
+			document.body.style.overflow = 'unset';
+		}
+		return () => {
+			document.body.style.overflow = 'unset';
+		};
+	}, [isMobileMenuOpen]);
 
 	// Animación de entrada para proyectos
 	useEffect(() => {
@@ -22,7 +35,7 @@ export default function Portfolio({
 			gsap.fromTo(
 				headerRef.current,
 				{ opacity: 0, y: 30 },
-				{ opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }
+				{ opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
 			);
 
 			gsap.fromTo(
@@ -35,8 +48,8 @@ export default function Portfolio({
 					duration: 0.6,
 					stagger: 0.15,
 					ease: "power3.out",
-					delay: 0.3
-				}
+					delay: 0.3,
+				},
 			);
 		}
 	}, [isAuthenticated, portfolioProjects.length]);
@@ -83,7 +96,24 @@ export default function Portfolio({
 						<a href="/" className="font-serif text-xl">
 							DL
 						</a>
-						<div className="flex gap-4 items-center">
+
+						{/* Desktop Menu */}
+						<div className="hidden md:flex gap-8 items-center">
+							<a href="/#inicio" className="nav-link">
+								{t.nav.home}
+							</a>
+							<a href="/#servicios" className="nav-link">
+								{t.nav.services}
+							</a>
+							<a href="/portfolio" className="nav-link text-[var(--color-accent)]">
+								{t.nav.portfolio}
+							</a>
+							<a href="/#proyectos" className="nav-link">
+								{t.nav.projects}
+							</a>
+							<a href="/#contacto" className="nav-link">
+								{t.nav.contact}
+							</a>
 							<button
 								onClick={toggleLanguage}
 								className="nav-link text-sm uppercase"
@@ -93,7 +123,77 @@ export default function Portfolio({
 							</button>
 							<button
 								onClick={handleLogout}
-								className="nav-link text-sm"
+								className="nav-link text-sm border border-[var(--color-border)] px-4 py-2 rounded-sm hover:border-[var(--color-accent)]"
+							>
+								{t.portfolio.logout}
+							</button>
+						</div>
+
+						{/* Mobile Menu Button */}
+						<button
+							className="md:hidden flex flex-col gap-1.5 w-8 h-8 justify-center items-center relative z-[60]"
+							onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+							aria-label="Toggle menu"
+						>
+							<span className={`block h-[2px] bg-[var(--color-text)] transition-all duration-300 ${isMobileMenuOpen ? 'w-6 rotate-45 translate-y-2' : 'w-8'}`}></span>
+							<span className={`block h-[2px] bg-[var(--color-text)] transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : 'w-6 opacity-100'}`}></span>
+							<span className={`block h-[2px] bg-[var(--color-text)] transition-all duration-300 ${isMobileMenuOpen ? 'w-6 -rotate-45 -translate-y-2' : 'w-8'}`}></span>
+						</button>
+					</div>
+
+					{/* Mobile Menu Overlay */}
+					<div className={`md:hidden fixed inset-0 bg-[var(--color-bg)] z-[50] transition-all duration-500 ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+						<div className="container-editorial h-full flex flex-col justify-center items-center gap-8">
+							<a
+								href="/#inicio"
+								className="text-2xl font-serif hover:text-[var(--color-accent)] transition-colors"
+								onClick={() => setIsMobileMenuOpen(false)}
+							>
+								{t.nav.home}
+							</a>
+							<a
+								href="/#servicios"
+								className="text-2xl font-serif hover:text-[var(--color-accent)] transition-colors"
+								onClick={() => setIsMobileMenuOpen(false)}
+							>
+								{t.nav.services}
+							</a>
+							<a
+								href="/portfolio"
+								className="text-2xl font-serif text-[var(--color-accent)]"
+								onClick={() => setIsMobileMenuOpen(false)}
+							>
+								{t.nav.portfolio}
+							</a>
+							<a
+								href="/#proyectos"
+								className="text-2xl font-serif hover:text-[var(--color-accent)] transition-colors"
+								onClick={() => setIsMobileMenuOpen(false)}
+							>
+								{t.nav.projects}
+							</a>
+							<a
+								href="/#contacto"
+								className="text-2xl font-serif hover:text-[var(--color-accent)] transition-colors"
+								onClick={() => setIsMobileMenuOpen(false)}
+							>
+								{t.nav.contact}
+							</a>
+							<button
+								onClick={() => {
+									toggleLanguage();
+									setIsMobileMenuOpen(false);
+								}}
+								className="text-xl uppercase border border-[var(--color-border)] px-6 py-2 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors"
+							>
+								{language === "es" ? "EN" : "ES"}
+							</button>
+							<button
+								onClick={() => {
+									handleLogout();
+									setIsMobileMenuOpen(false);
+								}}
+								className="text-xl border border-[var(--color-border)] px-6 py-2 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors"
 							>
 								{t.portfolio.logout}
 							</button>
@@ -102,7 +202,10 @@ export default function Portfolio({
 				</nav>
 
 				{/* Header */}
-				<section ref={headerRef} className="min-h-[40vh] flex items-center pt-24">
+				<section
+					ref={headerRef}
+					className="min-h-[40vh] flex items-center pt-24"
+				>
 					<div className="container-editorial">
 						<div className="grid-editorial items-end">
 							<div className="space-y-6">
@@ -110,14 +213,14 @@ export default function Portfolio({
 								<div className="accent-line"></div>
 							</div>
 
-							<div className="space-y-8">
+							<div className="space-y-4">
 								<h1
-									className="display-xl"
+									className="display-md"
 									style={{ whiteSpace: "pre-line" }}
 								>
 									{t.portfolio.privateTitle}
 								</h1>
-								<p className="body-lg max-w-lg">
+								<p className="body-md max-w-lg">
 									{t.portfolio.privateDescription}
 								</p>
 							</div>
@@ -128,14 +231,7 @@ export default function Portfolio({
 				{/* Projects Section */}
 				<section className="section">
 					<div className="container-editorial">
-						<div className="mb-16">
-							<p className="body-sm mb-4">
-								{t.portfolio.confidentialProjects}
-							</p>
-							<h2 className="display-lg">{t.portfolio.exclusiveWork}</h2>
-						</div>
-
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+						<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 							{portfolioProjects.map((project, i) => (
 								<ProjectCard
 									key={i}
@@ -202,17 +298,17 @@ export async function getServerSideProps(context) {
 		projects = [
 			{
 				num: "01",
-				title: "Proyecto Confidencial A",
+				title: "Dashboard Empresarial",
 				client: "Cliente Enterprise",
 				year: "2025",
 				tech: ["UI", "Figma", "UX"],
 				description:
 					"Plataforma empresarial completa con dashboard de analytics en tiempo real.",
-				image: "/images/proyecto1.png",
+				image: "/images/Proyecto5.png",
 			},
 			{
 				num: "02",
-				title: "Proyecto Confidencial B",
+				title: "Proyecto Energía",
 				client: "Startup Fintech",
 				year: "2025",
 				tech: ["UI", "Figma", "UX"],
@@ -222,12 +318,12 @@ export async function getServerSideProps(context) {
 			},
 			{
 				num: "03",
-				title: "Proyecto Confidencial C",
-				client: "Agencia Digital",
+				title: "Proyecto Mobile Educatic",
+				client: "Educatic",
 				year: "2026",
 				tech: ["UI", "Figma", "UX"],
 				description:
-					"Aplicación web para gestión de campañas y métricas de marketing.",
+					"Aplicación web para gestión Educativa y métricas de marketing.",
 				image: "/images/proyecto3.png",
 			},
 			{
@@ -239,6 +335,16 @@ export async function getServerSideProps(context) {
 				description:
 					"Experiencia de compra rediseñada con enfoque mobile-first y personalización.",
 				image: "/images/proyecto4.png",
+			},
+			{
+				num: "05",
+				title: "Visual 8 Pro",
+				client: "visual8.pro",
+				year: "2026",
+				tech: ["UI", "Web", "UX"],
+				description:
+					"Página web corporativa con diseño moderno y experiencia de usuario optimizada.",
+				image: "/images/proyecto6.png",
 			},
 		];
 	}
