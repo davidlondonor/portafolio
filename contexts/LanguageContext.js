@@ -44,7 +44,7 @@ export const translations = {
 			skillsTitle: "Habilidades",
 			skills: [
 				{ name: "React / Next.js", years: "5 años" },
-				{ name: "TypeScript", years: "4 años" },
+				{ name: "Github", years: "4 años" },
 				{ name: "Diseño UI/UX", years: "6 años" },
 				{ name: "CSS / Tailwind", years: "6 años" },
 				{ name: "Accesibilidad", years: "2 años" },
@@ -152,7 +152,7 @@ export const translations = {
 			skillsTitle: "Skills",
 			skills: [
 				{ name: "React / Next.js", years: "5 years" },
-				{ name: "TypeScript", years: "4 years" },
+				{ name: "Github", years: "4 years" },
 				{ name: "UI/UX Design", years: "6 years" },
 				{ name: "CSS / Tailwind", years: "6 years" },
 				{ name: "Accessibility", years: "2 years" },
