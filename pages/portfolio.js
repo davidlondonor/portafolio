@@ -336,6 +336,16 @@ export async function getServerSideProps(context) {
 					"Experiencia de compra rediseñada con enfoque mobile-first y personalización.",
 				image: "/images/proyecto4.png",
 			},
+			{
+				num: "05",
+				title: "Visual 8 Pro",
+				client: "visual8.pro",
+				year: "2026",
+				tech: ["UI", "Web", "UX"],
+				description:
+					"Página web corporativa con diseño moderno y experiencia de usuario optimizada.",
+				image: "/images/proyecto6.png",
+			},
 		];
 	}
 
