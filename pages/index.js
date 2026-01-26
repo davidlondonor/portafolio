@@ -241,8 +241,8 @@ export default function Home() {
 								{/* Right Column */}
 								<div className="space-y-8">
 									<h1 className="display-xl text-white">
-										<span className="hero-title block">David</span>
-										<span className="hero-title block">Londoño</span>
+										<span className="hero-title block">UX UI</span>
+										<span className="hero-title block font-mono text-[0.7em] whitespace-nowrap">&lt;Developer /&gt;</span>
 									</h1>
 									<p className="body-lg max-w-lg hero-description text-white/70">
 										{t.hero.description}

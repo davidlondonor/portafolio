@@ -14,7 +14,7 @@ export const translations = {
 		hero: {
 			role: "Frontend Developer",
 			description:
-				"Creo experiencias digitales que combinan estética y funcionalidad. Diseño y desarrollo interfaces que cuentan historias.",
+				"David Londoño. Creo experiencias digitales que combinan estética y funcionalidad. Diseño y desarrollo interfaces que cuentan historias.",
 			scroll: "Scroll",
 		},
 		services: {
@@ -122,7 +122,7 @@ export const translations = {
 		hero: {
 			role: "Frontend Developer",
 			description:
-				"I create digital experiences that combine aesthetics and functionality. I design and develop interfaces that tell stories.",
+				"David Londoño. I create digital experiences that combine aesthetics and functionality. I design and develop interfaces that tell stories.",
 			scroll: "Scroll",
 		},
 		services: {
