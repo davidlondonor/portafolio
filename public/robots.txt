@@ -1,4 +1,30 @@
+# Reglas para todos los crawlers
 User-agent: *
 Allow: /
+Disallow: /portfolio
+Disallow: /api/
+
+# Google
+User-agent: Googlebot
+Disallow: /portfolio
+Disallow: /api/
+
+# Bing
+User-agent: Bingbot
+Disallow: /portfolio
+Disallow: /api/
+
+# DuckDuckGo
+User-agent: DuckDuckBot
+Disallow: /portfolio
+Disallow: /api/
+
+# Yandex
+User-agent: Yandex
+Disallow: /portfolio
+Disallow: /api/
+
+# Baidu
+User-agent: Baiduspider
 Disallow: /portfolio
 Disallow: /api/
