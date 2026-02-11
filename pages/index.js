@@ -242,7 +242,7 @@ export default function Home() {
 								<div className="space-y-8">
 									<h1 className="display-xl text-white">
 										<span className="hero-title block">UX UI</span>
-										<span className="hero-title block font-mono text-[0.7em] whitespace-nowrap">&lt;Developer /&gt;</span>
+										<span className="hero-title block text-[0.7em] whitespace-nowrap" style={{ fontFamily: 'var(--font-geist-pixel-square)' }}>&lt;Developer /&gt;</span>
 									</h1>
 									<p className="body-lg max-w-lg hero-description text-white/70">
 										{t.hero.description}
@@ -275,7 +275,8 @@ export default function Home() {
 								].map((tech, j) => (
 									<span
 										key={j}
-										className="mx-12 text-2xl md:text-4xl font-serif text-white/50"
+										className="mx-12 text-2xl md:text-4xl text-white/50 hover:text-white hover:scale-150 transition-all duration-300 cursor-crosshair inline-block"
+										style={{ fontFamily: 'var(--font-geist-pixel-square)' }}
 									>
 										{tech}
 									</span>
@@ -294,7 +295,7 @@ export default function Home() {
 								<p className="body-sm mb-4 text-white/60">{t.services.title}</p>
 								<h2
 									className="display-md text-white"
-									style={{ whiteSpace: "pre-line" }}
+									style={{ whiteSpace: "pre-line", fontFamily: 'var(--font-geist-pixel-square)' }}
 								>
 									{t.services.subtitle}
 								</h2>
@@ -337,7 +338,7 @@ export default function Home() {
 							{/* Left - Big text */}
 							<div>
 								<p className="body-sm mb-6 text-white/60">{t.about.label}</p>
-								<h2 className="display-lg mb-8 text-white">
+								<h2 className="display-lg mb-8 text-white" style={{ fontFamily: 'var(--font-geist-pixel-square)' }}>
 									<SplitTextAnimation triggerOnScroll={true}>
 										{t.about.title}
 									</SplitTextAnimation>
@@ -365,7 +366,7 @@ export default function Home() {
 					<div className="container-editorial">
 						<RevealOnScroll className="mb-16">
 							<p className="body-sm mb-4 text-white/60">{t.projects.label}</p>
-							<h2 className="display-lg text-white">{t.projects.title}</h2>
+							<h2 className="display-lg text-white" style={{ fontFamily: 'var(--font-geist-pixel-square)' }}>{t.projects.title}</h2>
 						</RevealOnScroll>
 
 						<div className="space-y-0">
@@ -440,7 +441,7 @@ export default function Home() {
 								<p className="body-sm mb-6 text-[var(--color-bg)]/60">
 									{t.contact.label}
 								</p>
-								<h2 className="display-md mb-4">{t.contact.title}</h2>
+								<h2 className="display-md mb-4" style={{ fontFamily: 'var(--font-geist-pixel-square)' }}>{t.contact.title}</h2>
 								<p className="body-lg text-[var(--color-bg)]/70">
 									{t.contact.description}
 								</p>

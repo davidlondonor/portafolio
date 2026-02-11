@@ -4,6 +4,7 @@ import Script from 'next/script'
 import Head from 'next/head'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
+import { GeistPixelSquare } from 'geist/font/pixel'
 import { LanguageProvider } from '../contexts/LanguageContext'
 
 function MyApp({ Component, pageProps }) {
@@ -20,9 +21,10 @@ function MyApp({ Component, pageProps }) {
         :root {
           --font-geist-sans: ${GeistSans.style.fontFamily};
           --font-geist-mono: ${GeistMono.style.fontFamily};
+          --font-geist-pixel: ${GeistPixelSquare.style.fontFamily};
         }
       `}</style>
-      <div className={`${GeistSans.variable} ${GeistMono.variable}`}>
+      <div className={`${GeistSans.variable} ${GeistMono.variable} ${GeistPixelSquare.variable}`}>
         <Component {...pageProps} />
       </div>
       <Analytics />
