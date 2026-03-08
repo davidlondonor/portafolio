@@ -35,7 +35,7 @@ function MyApp({ Component, pageProps }) {
           strategy="afterInteractive"
         />
       )}
-      <Script
+      {/* <Script
         src="https://cdn.voiceflow.com/widget-next/bundle.mjs"
         strategy="afterInteractive"
         onLoad={() => {
@@ -48,7 +48,7 @@ function MyApp({ Component, pageProps }) {
             },
           });
         }}
-      />
+      /> */}
     </LanguageProvider>
   )
 }
