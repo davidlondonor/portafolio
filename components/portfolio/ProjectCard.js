@@ -41,7 +41,7 @@ const ProjectCard = forwardRef(({ project }, ref) => {
 				<div className="p-6">
 					<h3 className="display-sm mb-2">{project.title}</h3>
 
-					<p className="body-sm text-[var(--color-accent)] mb-3">
+					<p className="body-sm text-[var(--color-accent)] font-bold mb-3">
 						{project.client}
 					</p>
 
@@ -59,6 +59,26 @@ const ProjectCard = forwardRef(({ project }, ref) => {
 							</span>
 						))}
 					</div>
+
+					{project.url && (
+						<a
+							href={project.url}
+							target="_blank"
+							rel="noopener noreferrer nofollow"
+							className="inline-flex items-center gap-2 mt-4 text-sm text-[var(--color-text-light)] hover:text-[var(--color-text)] hover:[text-shadow:0.5px_0_0_currentColor]"
+						>
+							{project.url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}
+							<svg
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="2"
+								className="w-4 h-4"
+							>
+								<path d="M7 17L17 7M17 7H8M17 7v9" />
+							</svg>
+						</a>
+					)}
 				</div>
 			</div>
 

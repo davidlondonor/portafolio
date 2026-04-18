@@ -4,6 +4,18 @@ import { useLanguage } from "../contexts/LanguageContext";
 import gsap from "gsap";
 import LoginForm from "../components/portfolio/LoginForm";
 import ProjectCard from "../components/portfolio/ProjectCard";
+import ArchiveGrid from "../components/portfolio/ArchiveGrid";
+
+const ARCHIVE_ITEMS = [
+	{ src: "/images/brand/agronegocios.jpg", caption: "Agronegocios" },
+	{ src: "/images/brand/proceso.jpg", caption: "Proceso" },
+	{ src: "/images/brand/carpeta-ultrafiltracion.jpg", caption: "Carpeta Ultrafiltración" },
+	{ src: "/images/brand/charla-jacto.png", caption: "Charla Jacto" },
+	{ src: "/images/brand/material-jacto.png", caption: "Material Jacto" },
+	{ src: "/images/brand/oregon.png", caption: "Oregon" },
+	{ src: "/images/brand/screen-2017-01-25.png", caption: "Screen 2017" },
+	{ src: "/images/brand/portafolio.pdf", caption: "Portafolio (PDF)", type: "pdf" },
+];
 
 export default function Portfolio({
 	isAuthenticated: initialAuth,
@@ -19,10 +31,10 @@ export default function Portfolio({
 	const headerRef = useRef(null);
 
 	const categories = [
-		{ id: "all", label: t.portfolio.filters.all },
-		{ id: "web", label: t.portfolio.filters.web },
-		{ id: "app", label: t.portfolio.filters.app },
-		{ id: "mobile", label: t.portfolio.filters.mobile },
+		{ id: "all", label: t.portfolio.filters.all, color: "#C4B5FD" },
+		{ id: "web", label: t.portfolio.filters.web, color: "#86EFAC" },
+		{ id: "app", label: t.portfolio.filters.app, color: "#FDBA74" },
+		{ id: "mobile", label: t.portfolio.filters.mobile, color: "#93C5FD" },
 	];
 
 	const filteredProjects =
@@ -222,7 +234,7 @@ export default function Portfolio({
 				{/* Header */}
 				<section
 					ref={headerRef}
-					className="min-h-[40vh] flex items-center pt-24"
+					className="min-h-[40px] flex items-center pt-24"
 				>
 					<div className="container-editorial">
 						<div className="grid-editorial items-end">
@@ -245,18 +257,21 @@ export default function Portfolio({
 				<section className="section">
 					<div className="container-editorial">
 						{/* Category filter chips */}
-						<div className="flex flex-wrap gap-2 mb-8 overflow-x-auto pb-1 -mx-1 px-1">
+						<div className="flex flex-wrap gap-2 mt-16 mb-8 overflow-x-auto pb-1 -mx-1 px-1">
 							{categories.map((cat) => {
 								const isActive = activeCategory === cat.id;
 								return (
 									<button
 										key={cat.id}
 										onClick={() => setActiveCategory(cat.id)}
-										className={`px-4 py-2 text-sm rounded-full border whitespace-nowrap transition-colors ${
-											isActive
-												? "border-[var(--color-accent)] text-[var(--color-accent)]"
-												: "border-[var(--color-border)] text-[var(--color-text-light)] hover:text-[var(--color-text)] hover:border-[var(--color-text-light)]"
+										aria-pressed={isActive}
+										className={`px-4 py-2 text-[1.25rem] rounded-full whitespace-nowrap transition-all ${
+											isActive ? "font-bold" : "opacity-70 hover:opacity-100"
 										}`}
+										style={{
+											backgroundColor: cat.color,
+											color: "var(--color-text)",
+										}}
 									>
 										{cat.label}
 									</button>
@@ -284,6 +299,13 @@ export default function Portfolio({
 						)}
 					</div>
 				</section>
+
+				{/* Archive */}
+				<ArchiveGrid
+					items={ARCHIVE_ITEMS}
+					title={t.portfolio.archiveTitle}
+					description={t.portfolio.archiveDescription}
+				/>
 
 				{/* Footer */}
 				<footer className="footer-editorial">
@@ -341,24 +363,26 @@ export async function getServerSideProps(context) {
 			{
 				num: "01",
 				title: "Dashboard Empresarial",
-				client: "Cliente Enterprise",
+				client: "EPM",
 				year: "2025",
 				category: "app",
 				tech: ["UI", "Figma", "UX"],
 				description:
 					"Plataforma empresarial completa con dashboard de analytics en tiempo real.",
-				image: "/images/Proyecto5.png",
+				image: "/images/epm.png",
+				url: "https://www.epm.com.co/",
 			},
 			{
 				num: "02",
 				title: "Proyecto Energía",
-				client: "Startup Fintech",
+				client: "XM",
 				year: "2025",
 				category: "app",
 				tech: ["UI", "Figma", "UX"],
 				description:
 					"Sistema de pagos y gestión financiera con integraciones bancarias.",
-				image: "/images/proyecto2.png",
+				image: "/images/xm.png",
+				url: "https://www.xm.com.co/",
 			},
 			{
 				num: "03",
@@ -369,7 +393,8 @@ export async function getServerSideProps(context) {
 				tech: ["UI", "Figma", "UX"],
 				description:
 					"Aplicación web para gestión Educativa y métricas de marketing.",
-				image: "/images/proyecto3.png",
+				image: "/images/educatic.png",
+				url: "https://www.educatic.com.co/",
 			},
 			{
 				num: "04",
@@ -380,7 +405,7 @@ export async function getServerSideProps(context) {
 				tech: ["UI", "Figma", "UX"],
 				description:
 					"Experiencia de compra rediseñada con enfoque mobile-first y personalización.",
-				image: "/images/proyecto4.png",
+				image: "/images/confidencial-d.png",
 			},
 			{
 				num: "05",
@@ -391,7 +416,30 @@ export async function getServerSideProps(context) {
 				tech: ["UI", "Web", "UX"],
 				description:
 					"Página web corporativa con diseño moderno y experiencia de usuario optimizada.",
-				image: "/images/proyecto6.png",
+				image: "/images/visual8pro.png",
+				url: "https://visual8.pro",
+			},
+			{
+				num: "06",
+				title: "Trans Pacific Atlantic",
+				client: "Trans Pacific Atlantic",
+				year: "2026",
+				category: "web",
+				tech: ["UI", "Web", "UX"],
+				description: "Logística B2B.",
+				image: "/images/transpacificatlantic.jpg",
+				url: "https://transpacificatlantic.com",
+			},
+			{
+				num: "07",
+				title: "Specialized Fitness Nutrition",
+				client: "Specialized Fitness Nutrition",
+				year: "2025",
+				category: "web",
+				tech: ["UI", "Web", "UX"],
+				description: "Nutrición deportiva especializada.",
+				image: "/images/specializedfitnessnutrition.jpg",
+				url: "https://specializedfitnessnutrition.com/",
 			},
 		];
 	}
