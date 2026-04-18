@@ -116,6 +116,8 @@ export const translations = {
 				mobile: "Móvil",
 			},
 			emptyState: "No hay proyectos en esta categoría.",
+			archiveTitle: "Archivo",
+			archiveDescription: "Trabajos complementarios y piezas impresas.",
 		},
 	},
 	en: {
@@ -231,6 +233,8 @@ export const translations = {
 				mobile: "Mobile",
 			},
 			emptyState: "No projects in this category.",
+			archiveTitle: "Archive",
+			archiveDescription: "Complementary work and print pieces.",
 		},
 	},
 };

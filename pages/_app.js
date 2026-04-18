@@ -52,20 +52,6 @@ function MyApp({ Component, pageProps }) {
 					strategy="afterInteractive"
 				/>
 			)}
-			<Script
-				src="https://cdn.voiceflow.com/widget-next/bundle.mjs"
-				strategy="afterInteractive"
-				onLoad={() => {
-					window.voiceflow.chat.load({
-						verify: { projectID: "6994abd896fd12fff668f839" },
-						url: "https://general-runtime.voiceflow.com",
-						versionID: "production",
-						voice: {
-							url: "https://runtime-api.voiceflow.com",
-						},
-					});
-				}}
-			/>
 		</LanguageProvider>
 	);
 }
