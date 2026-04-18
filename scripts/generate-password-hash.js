@@ -18,6 +18,5 @@ bcrypt.hash(password, saltRounds, (err, hash) => {
   console.log(hash);
   console.log('\n📋 Copia esta línea a tu .env.local ($ ya escapados):');
   console.log(`PORTFOLIO_PASSWORD_HASH=${escapedHash}`);
-  console.log('\n⚠️  Los caracteres $ deben escaparse con \\ en archivos .env');
-  console.log('💡 Tip: Mantén PORTFOLIO_PASSWORD temporalmente para transición\n');
+  console.log('\n⚠️  Los caracteres $ deben escaparse con \\ en archivos .env\n');
 });
