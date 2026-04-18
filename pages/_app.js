@@ -2,14 +2,30 @@ import "../styles/globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import Script from "next/script";
 import Head from "next/head";
+import App from "next/app";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { GeistPixelSquare } from "geist/font/pixel";
 import { LanguageProvider } from "../contexts/LanguageContext";
 
-function MyApp({ Component, pageProps }) {
+const SUPPORTED = ["es", "en"];
+
+function parseCookieLang(cookieHeader) {
+	if (!cookieHeader) return null;
+	const match = cookieHeader.match(/(?:^|;\s*)preferred-language=([^;]+)/);
+	if (!match) return null;
+	const val = decodeURIComponent(match[1]);
+	return SUPPORTED.includes(val) ? val : null;
+}
+
+function parseAcceptLang(header) {
+	if (!header) return null;
+	return header.toLowerCase().startsWith("es") ? "es" : "en";
+}
+
+function MyApp({ Component, pageProps, initialLanguage }) {
 	return (
-		<LanguageProvider>
+		<LanguageProvider initialLanguage={initialLanguage}>
 			<Head>
 				<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 				<link rel="icon" href="/favicon.ico" sizes="any" />
@@ -55,5 +71,26 @@ function MyApp({ Component, pageProps }) {
 		</LanguageProvider>
 	);
 }
+
+MyApp.getInitialProps = async (appContext) => {
+	const appProps = await App.getInitialProps(appContext);
+
+	let initialLanguage = "es";
+	const { req } = appContext.ctx;
+	if (req) {
+		const fromCookie = parseCookieLang(req.headers.cookie);
+		if (fromCookie) {
+			initialLanguage = fromCookie;
+		} else {
+			const fromAccept = parseAcceptLang(req.headers["accept-language"]);
+			if (fromAccept) initialLanguage = fromAccept;
+		}
+	} else if (typeof document !== "undefined") {
+		const fromCookie = parseCookieLang(document.cookie);
+		if (fromCookie) initialLanguage = fromCookie;
+	}
+
+	return { ...appProps, initialLanguage };
+};
 
 export default MyApp;

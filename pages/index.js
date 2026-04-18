@@ -204,7 +204,7 @@ export default function Home() {
 									toggleLanguage();
 									setIsMobileMenuOpen(false);
 								}}
-								className="text-xl uppercase text-[#fafaf9] border border-[#fafaf9] px-6 py-2 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors"
+								className="text-xl uppercase text-[#fafaf9] border border-[#fafaf9] px-6 py-2 rounded-lg hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors"
 							>
 								{language === "es" ? "EN" : "ES"}
 							</button>
@@ -401,7 +401,7 @@ export default function Home() {
 								href="https://github.com/davidlondonor"
 								target="_blank"
 								rel="noopener noreferrer"
-								className="inline-flex items-center gap-2 text-white border border-white/30 px-6 py-3 hover:bg-white hover:text-black transition-all"
+								className="inline-flex items-center gap-2 text-white border border-white/30 px-6 py-3 rounded-lg hover:bg-white hover:text-black transition-all"
 							>
 								<span>{t.projects.viewAll}</span>
 								<svg
@@ -450,7 +450,7 @@ export default function Home() {
 										value={formData.name}
 										onChange={handleInputChange}
 										required
-										className="w-full px-4 py-3 bg-[var(--color-bg)]/10 border border-[var(--color-bg)]/20 rounded-sm text-[var(--color-bg)] placeholder-[var(--color-bg)]/40 focus:outline-none focus:border-[var(--color-accent)] transition-colors"
+										className="w-full px-4 py-3 bg-[var(--color-bg)]/10 border border-[var(--color-bg)]/20 rounded-lg text-[var(--color-bg)] placeholder-[var(--color-bg)]/40 focus:outline-none focus:border-[var(--color-accent)] transition-colors"
 										placeholder={t.contact.form.namePlaceholder}
 									/>
 								</div>
@@ -469,7 +469,7 @@ export default function Home() {
 										value={formData.email}
 										onChange={handleInputChange}
 										required
-										className="w-full px-4 py-3 bg-[var(--color-bg)]/10 border border-[var(--color-bg)]/20 rounded-sm text-[var(--color-bg)] placeholder-[var(--color-bg)]/40 focus:outline-none focus:border-[var(--color-accent)] transition-colors"
+										className="w-full px-4 py-3 bg-[var(--color-bg)]/10 border border-[var(--color-bg)]/20 rounded-lg text-[var(--color-bg)] placeholder-[var(--color-bg)]/40 focus:outline-none focus:border-[var(--color-accent)] transition-colors"
 										placeholder={t.contact.form.emailPlaceholder}
 									/>
 								</div>
@@ -496,7 +496,7 @@ export default function Home() {
 								<button
 									type="submit"
 									disabled={isSubmitting}
-									className="w-full px-8 py-4 bg-[var(--color-bg)] text-[var(--color-text)] border-2 border-[var(--color-bg)] hover:bg-[var(--color-accent)] hover:text-[var(--color-bg)] hover:border-[var(--color-accent)] hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+									className="w-full px-8 py-4 rounded-lg bg-[var(--color-bg)] text-[var(--color-text)] border-2 border-[var(--color-bg)] hover:bg-[#1d4ed8] hover:text-[var(--color-bg)] hover:border-[#1d4ed8] hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
 								>
 									{isSubmitting
 										? t.contact.form.sending

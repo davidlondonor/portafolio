@@ -1,6 +1,14 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 
 const LanguageContext = createContext();
+
+const LANG_COOKIE = "preferred-language";
+const LANG_COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 year
+
+function writeLangCookie(lang) {
+	if (typeof document === "undefined") return;
+	document.cookie = `${LANG_COOKIE}=${lang}; path=/; max-age=${LANG_COOKIE_MAX_AGE}; SameSite=Lax`;
+}
 
 export const translations = {
 	es: {
@@ -118,6 +126,11 @@ export const translations = {
 			emptyState: "No hay proyectos en esta categoría.",
 			archiveTitle: "Archivo",
 			archiveDescription: "Trabajos complementarios y piezas impresas.",
+			a11y: {
+				close: "Cerrar",
+				prev: "Anterior",
+				next: "Siguiente",
+			},
 		},
 	},
 	en: {
@@ -235,28 +248,24 @@ export const translations = {
 			emptyState: "No projects in this category.",
 			archiveTitle: "Archive",
 			archiveDescription: "Complementary work and print pieces.",
+			a11y: {
+				close: "Close",
+				prev: "Previous",
+				next: "Next",
+			},
 		},
 	},
 };
 
-export function LanguageProvider({ children }) {
-	const [language, setLanguage] = useState("es");
-
-	useEffect(() => {
-		// Detect browser language on mount
-		const browserLang = navigator.language || navigator.userLanguage;
-		const lang = browserLang.startsWith("es") ? "es" : "en";
-
-		// Check if user has a saved preference
-		const savedLang = localStorage.getItem("preferred-language");
-
-		setLanguage(savedLang || lang);
-	}, []);
+export function LanguageProvider({ initialLanguage = "es", children }) {
+	const [language, setLanguage] = useState(
+		translations[initialLanguage] ? initialLanguage : "es",
+	);
 
 	const toggleLanguage = () => {
 		const newLang = language === "es" ? "en" : "es";
 		setLanguage(newLang);
-		localStorage.setItem("preferred-language", newLang);
+		writeLangCookie(newLang);
 	};
 
 	const t = translations[language];

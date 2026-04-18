@@ -1,7 +1,16 @@
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useLanguage } from "../../contexts/LanguageContext";
+
+function loc(value, lang) {
+	if (value == null) return "";
+	if (typeof value === "string") return value;
+	return value[lang] || value.es || value.en || "";
+}
 
 export default function ArchiveGrid({ items, title, description }) {
+	const { language, t } = useLanguage();
+	const a11y = t.portfolio.a11y;
 	const imageItems = items.filter((it) => it.type !== "pdf");
 	const [openIndex, setOpenIndex] = useState(null);
 
@@ -26,6 +35,19 @@ export default function ArchiveGrid({ items, title, description }) {
 		return () => window.removeEventListener("keydown", onKey);
 	}, [openIndex, closeModal, goPrev, goNext]);
 
+	const touchStartX = useRef(null);
+	const onTouchStart = (e) => {
+		touchStartX.current = e.touches[0].clientX;
+	};
+	const onTouchEnd = (e) => {
+		if (touchStartX.current === null) return;
+		const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+		touchStartX.current = null;
+		if (Math.abs(deltaX) < 40) return;
+		if (deltaX < 0) goNext();
+		else goPrev();
+	};
+
 	const onBackdropClick = (e) => {
 		if (e.target === e.currentTarget) closeModal();
 	};
@@ -36,6 +58,7 @@ export default function ArchiveGrid({ items, title, description }) {
 	};
 
 	const current = openIndex !== null ? imageItems[openIndex] : null;
+	const currentCaption = current ? loc(current.caption, language) : "";
 
 	return (
 		<section className="section border-t border-[var(--color-border)] mt-24 pt-16">
@@ -50,6 +73,7 @@ export default function ArchiveGrid({ items, title, description }) {
 				<ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-6 gap-y-10">
 					{items.map((item) => {
 						const isPdf = item.type === "pdf";
+						const caption = loc(item.caption, language);
 						const Wrapper = isPdf ? "a" : "button";
 						const wrapperProps = isPdf
 							? {
@@ -76,7 +100,7 @@ export default function ArchiveGrid({ items, title, description }) {
 										) : (
 											<Image
 												src={item.src}
-												alt={item.caption}
+												alt={caption}
 												fill
 												sizes="(max-width: 768px) 50vw, 20vw"
 												className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
@@ -85,7 +109,7 @@ export default function ArchiveGrid({ items, title, description }) {
 										)}
 									</div>
 									<p className="mt-3 text-sm text-[var(--color-text-light)] group-hover:text-[var(--color-text)] transition-colors">
-										{item.caption}
+										{caption}
 									</p>
 								</Wrapper>
 							</li>
@@ -98,12 +122,13 @@ export default function ArchiveGrid({ items, title, description }) {
 				<div
 					className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
 					onClick={onBackdropClick}
+					onTouchStart={onTouchStart}
+					onTouchEnd={onTouchEnd}
 				>
-					{/* Prev */}
 					<button
 						onClick={goPrev}
-						className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white hover:text-[var(--color-accent)] transition-colors z-10"
-						aria-label="Anterior"
+						className="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 text-white hover:text-[var(--color-accent)] transition-colors z-10 p-3"
+						aria-label={a11y.prev}
 					>
 						<svg
 							viewBox="0 0 24 24"
@@ -116,11 +141,11 @@ export default function ArchiveGrid({ items, title, description }) {
 						</svg>
 					</button>
 
-					<div className="relative max-w-3xl max-h-[80vh] m-4">
+					<div className="relative max-w-3xl max-h-[85vh] m-4">
 						<button
 							onClick={closeModal}
-							className="absolute -top-10 right-0 text-white hover:text-[var(--color-accent)] transition-colors z-10"
-							aria-label="Cerrar"
+							className="absolute -top-12 right-0 text-white hover:text-[var(--color-accent)] transition-colors z-10 p-2"
+							aria-label={a11y.close}
 						>
 							<svg
 								viewBox="0 0 24 24"
@@ -136,24 +161,23 @@ export default function ArchiveGrid({ items, title, description }) {
 						<Image
 							key={current.src}
 							src={current.src}
-							alt={current.caption}
+							alt={currentCaption}
 							width={1200}
 							height={900}
 							className="object-contain max-h-[80vh] w-auto rounded-lg"
 						/>
 						<p className="mt-3 text-sm text-white/80 text-center">
-							{current.caption}
+							{currentCaption}
 							<span className="ml-2 text-white/50">
 								{openIndex + 1} / {imageItems.length}
 							</span>
 						</p>
 					</div>
 
-					{/* Next */}
 					<button
 						onClick={goNext}
-						className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white hover:text-[var(--color-accent)] transition-colors z-10"
-						aria-label="Siguiente"
+						className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 text-white hover:text-[var(--color-accent)] transition-colors z-10 p-3"
+						aria-label={a11y.next}
 					>
 						<svg
 							viewBox="0 0 24 24"
