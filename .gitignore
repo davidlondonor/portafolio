@@ -36,9 +36,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
-# access logs (contiene IPs y datos sensibles)
-/logs/*.json
-/logs/*-backup-*.json
-
 # backups
 /backup-design-*

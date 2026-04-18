@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-Package manager: the lockfile is `pnpm-lock.yaml`, but scripts invoke `npm`/`node` directly — use `pnpm install` for dependencies and either `pnpm` or `npm` for scripts.
+Package manager: dependencies are locked with `pnpm-lock.yaml` — use `pnpm install` for install; `package.json` scripts can be run with `pnpm` or `npm run`.
 
 ```bash
 pnpm install              # install dependencies (respects pnpm-lock.yaml)
@@ -19,7 +19,6 @@ Auth/ops helpers (run with `node`, not via pnpm scripts):
 ```bash
 node scripts/generate-password-hash.js YOUR_PASSWORD   # bcrypt hash for PORTFOLIO_PASSWORD_HASH
 node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"  # PORTFOLIO_AUTH_SECRET
-node scripts/view-logs.js [--failed|--success|--rate-limited] [--limit=N]  # read /logs/access-YYYY-MM.json
 ```
 
 There is no test suite configured. `test-hash.js` at the repo root is an ad-hoc script (run with `node test-hash.js`), not a test runner.
@@ -35,7 +34,7 @@ Styling is Tailwind (v3) plus heavy custom CSS in `styles/globals.css` defining 
 ### Top-level flow
 
 - `pages/_app.js` wraps every page in `LanguageProvider` (from `contexts/LanguageContext.js`), injects Geist fonts, and conditionally loads Cloudflare Web Analytics (`NEXT_PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN`) and the Voiceflow chat widget. `@vercel/analytics` also mounts here.
-- `pages/index.js` is the public single-page site: hero, services, about, projects, contact. Uses `AnimatedHero`, `RevealOnScroll`, `CardAnimation`, `SplitTextAnimation`, `ShaderAnimation`, and `Turnstile`. The contact form posts to `/api/contact`.
+- `pages/index.js` is the public single-page site: hero, services, about, projects, contact. Uses `AnimatedHero`, `RevealOnScroll`, `CardAnimation`, `SplitTextAnimation`, and `ShaderAnimation`. The contact form posts to `/api/contact` (plain Web3Forms proxy, no captcha).
 - `pages/portfolio.js` is a password-protected page. It runs `getServerSideProps` which reads the `portfolio_auth` cookie, verifies the JWT with `PORTFOLIO_AUTH_SECRET`, and only then returns `portfolioProjects`. Unauthenticated requests render `components/portfolio/LoginForm.js` instead.
 
 ### i18n
@@ -46,31 +45,28 @@ Styling is Tailwind (v3) plus heavy custom CSS in `styles/globals.css` defining 
 
 GSAP 3 (+ ScrollTrigger) drives all motion. The reusable wrappers in `components/` (`AnimatedHero`, `RevealOnScroll`, `CardAnimation`, `SplitTextAnimation`, `HoverMagnetic`, `TextStaggerAnimation`, `MorphingShapes`, `NumberCounter`, `ParallaxSection`, `StaggeredList`) each key off specific CSS class names (e.g. `.hero-title`, `.hero-description`, `.reveal-item`, `.char`). When adding new sections, reuse those class hooks so the animation components find their targets. See `GSAP_ANIMATIONS.md` for the full contract of each wrapper. `components/ui/shader-animation.tsx` is a Three.js/WebGL background used for decorative effects.
 
-### Auth + security (portfolio area)
+### Auth (portfolio area)
 
-The auth stack is deliberately hardened — don't bypass it. Flow:
+Minimal password gate. Deliberately *not* paranoid — this protects portfolio screenshots, not secrets. Flow:
 
-1. Client posts to `/api/portfolio-auth` with `{ password, turnstileToken }`.
-2. `lib/rate-limiter.js` (in-memory, 5 attempts / 15 min per IP) gates the request.
-3. In non-dev, `lib/turnstile.js` verifies the Cloudflare Turnstile token.
-4. `lib/security.js#verifyPassword` does a `bcrypt.compare` against `PORTFOLIO_PASSWORD_HASH`. `PORTFOLIO_PASSWORD` (plaintext) is a deprecated fallback kept only for migration — avoid relying on it.
-5. A random 100–300ms delay (`randomDelay`) is applied on every path to mask timing.
-6. On success, a 1-hour JWT signed with `PORTFOLIO_AUTH_SECRET` is set as an `HttpOnly; SameSite=Lax` cookie named `portfolio_auth` (adds `Secure` when `NODE_ENV=production`).
-7. Every attempt is appended to `/logs/access-YYYY-MM.json` via `lib/access-logger.js`, which sanitizes IPs and truncates user agents. Log files are gitignored and rotate at ~10k lines.
-8. `/api/portfolio-logout` clears the cookie. `getServerSideProps` in `pages/portfolio.js` re-verifies the JWT on every request.
+1. `LoginForm` posts `{ password }` to `/api/portfolio-auth`.
+2. Route does `bcrypt.compare(password, PORTFOLIO_PASSWORD_HASH)`.
+3. On success, signs a 1h JWT with `PORTFOLIO_AUTH_SECRET` and sets it as an `HttpOnly; SameSite=Lax` cookie named `portfolio_auth` (adds `Secure` when `NODE_ENV=production`).
+4. `/api/portfolio-logout` clears the cookie.
+5. `getServerSideProps` in `pages/portfolio.js` re-verifies the JWT on every request; only then returns `portfolioProjects`.
 
-Rate-limit state lives in process memory — it resets on Vercel cold starts. For higher scale, `docs/SECURITY.md` outlines the Upstash Redis migration (keep the same `checkRateLimit` interface).
+No rate limiting, no captcha, no access logging, no timing-attack delay — all that was removed. If you need to re-add any of that, do it intentionally, not as default. To rotate the password: `node scripts/generate-password-hash.js NEW_PASSWORD` and paste into `.env.local` + Vercel.
 
 Security headers (`X-Frame-Options`, `X-Content-Type-Options`, `X-XSS-Protection`, `Referrer-Policy`) are set for `/api/:path*` in `next.config.js`.
 
 ### Environment variables
 
-See `.env.example`. Required for the portfolio auth flow: `PORTFOLIO_PASSWORD_HASH` and `PORTFOLIO_AUTH_SECRET`. Optional integrations: `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` (Cloudflare Turnstile), `NEXT_PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN` (Web Analytics), `WEB3FORMS_ACCESS_KEY` (contact form — must stay server-side, never `NEXT_PUBLIC_`). When editing `.env*` examples, keep the `$` characters in bcrypt hashes escaped as `\$` so shell interpolation doesn't mangle them.
+See `.env.example`. Required for the portfolio auth flow: `PORTFOLIO_PASSWORD_HASH` and `PORTFOLIO_AUTH_SECRET`. Optional integrations: `NEXT_PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN` (Web Analytics), `WEB3FORMS_ACCESS_KEY` (contact form — must stay server-side, never `NEXT_PUBLIC_`). When editing `.env*` examples, keep the `$` characters in bcrypt hashes escaped as `\$` so shell interpolation doesn't mangle them.
 
 ## Conventions worth knowing
 
-- Tabs, not spaces (see existing `.js`/`.tsx` files).
+- Follow the existing file's indentation. Source under `pages/` and `components/` uses tabs; repo-level configs (`next.config.js`, `tailwind.config.js`, `tsconfig.json`) use spaces.
 - `next.config.js` whitelists `images.unsplash.com` for `next/image`; add new remote hosts there rather than using `<img>`.
-- `backup-design-20260118/` is an archived snapshot (also gitignored pattern `backup-design-*`) — don't edit it or import from it.
+- `backup-design-*/` directories are archived snapshots (gitignored) — don't edit them or import from them.
 - `pages/index.html` and `pages/index.js.backup` are legacy artifacts; the live home page is `pages/index.js`.
 - `resumen.md` describes an earlier version of this project (Next.js 12, yellow hero) and is stale — prefer `README.md` and `docs/SECURITY.md` for current context.

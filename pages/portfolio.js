@@ -13,9 +13,22 @@ export default function Portfolio({
 	const isAuthenticated = initialAuth === true;
 	const portfolioProjects = initialProjects || [];
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+	const [activeCategory, setActiveCategory] = useState("all");
 
 	const projectsRef = useRef([]);
 	const headerRef = useRef(null);
+
+	const categories = [
+		{ id: "all", label: t.portfolio.filters.all },
+		{ id: "web", label: t.portfolio.filters.web },
+		{ id: "app", label: t.portfolio.filters.app },
+		{ id: "mobile", label: t.portfolio.filters.mobile },
+	];
+
+	const filteredProjects =
+		activeCategory === "all"
+			? portfolioProjects
+			: portfolioProjects.filter((p) => p.category === activeCategory);
 
 	// Block scroll when mobile menu is open
 	useEffect(() => {
@@ -29,30 +42,35 @@ export default function Portfolio({
 		};
 	}, [isMobileMenuOpen]);
 
-	// Animación de entrada para proyectos
+	// Header entrance (once)
 	useEffect(() => {
-		if (isAuthenticated && projectsRef.current.length > 0) {
+		if (isAuthenticated && headerRef.current) {
 			gsap.fromTo(
 				headerRef.current,
 				{ opacity: 0, y: 30 },
 				{ opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
 			);
-
-			gsap.fromTo(
-				projectsRef.current,
-				{ opacity: 0, y: 50, scale: 0.95 },
-				{
-					opacity: 1,
-					y: 0,
-					scale: 1,
-					duration: 0.6,
-					stagger: 0.15,
-					ease: "power3.out",
-					delay: 0.3,
-				},
-			);
 		}
-	}, [isAuthenticated, portfolioProjects.length]);
+	}, [isAuthenticated]);
+
+	// Re-animate grid when filter changes
+	useEffect(() => {
+		if (!isAuthenticated) return;
+		const els = projectsRef.current.filter(Boolean);
+		if (!els.length) return;
+		gsap.fromTo(
+			els,
+			{ opacity: 0, y: 30, scale: 0.97 },
+			{
+				opacity: 1,
+				y: 0,
+				scale: 1,
+				duration: 0.5,
+				stagger: 0.08,
+				ease: "power3.out",
+			},
+		);
+	}, [activeCategory, isAuthenticated]);
 
 	const handleLogout = async () => {
 		try {
@@ -208,11 +226,6 @@ export default function Portfolio({
 				>
 					<div className="container-editorial">
 						<div className="grid-editorial items-end">
-							<div className="space-y-6">
-								<p className="body-sm">{t.portfolio.privateContent}</p>
-								<div className="accent-line"></div>
-							</div>
-
 							<div className="space-y-4">
 								<h1
 									className="display-md"
@@ -231,15 +244,44 @@ export default function Portfolio({
 				{/* Projects Section */}
 				<section className="section">
 					<div className="container-editorial">
-						<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-							{portfolioProjects.map((project, i) => (
-								<ProjectCard
-									key={i}
-									ref={(el) => (projectsRef.current[i] = el)}
-									project={project}
-								/>
-							))}
+						{/* Category filter chips */}
+						<div className="flex flex-wrap gap-2 mb-8 overflow-x-auto pb-1 -mx-1 px-1">
+							{categories.map((cat) => {
+								const isActive = activeCategory === cat.id;
+								return (
+									<button
+										key={cat.id}
+										onClick={() => setActiveCategory(cat.id)}
+										className={`px-4 py-2 text-sm rounded-full border whitespace-nowrap transition-colors ${
+											isActive
+												? "border-[var(--color-accent)] text-[var(--color-accent)]"
+												: "border-[var(--color-border)] text-[var(--color-text-light)] hover:text-[var(--color-text)] hover:border-[var(--color-text-light)]"
+										}`}
+									>
+										{cat.label}
+									</button>
+								);
+							})}
 						</div>
+
+						{filteredProjects.length > 0 ? (
+							<div
+								key={activeCategory}
+								className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+							>
+								{filteredProjects.map((project, i) => (
+									<ProjectCard
+										key={project.num}
+										ref={(el) => (projectsRef.current[i] = el)}
+										project={project}
+									/>
+								))}
+							</div>
+						) : (
+							<p className="body-sm text-[var(--color-text-light)] py-12 text-center">
+								{t.portfolio.emptyState}
+							</p>
+						)}
 					</div>
 				</section>
 
@@ -301,6 +343,7 @@ export async function getServerSideProps(context) {
 				title: "Dashboard Empresarial",
 				client: "Cliente Enterprise",
 				year: "2025",
+				category: "app",
 				tech: ["UI", "Figma", "UX"],
 				description:
 					"Plataforma empresarial completa con dashboard de analytics en tiempo real.",
@@ -311,6 +354,7 @@ export async function getServerSideProps(context) {
 				title: "Proyecto Energía",
 				client: "Startup Fintech",
 				year: "2025",
+				category: "app",
 				tech: ["UI", "Figma", "UX"],
 				description:
 					"Sistema de pagos y gestión financiera con integraciones bancarias.",
@@ -321,6 +365,7 @@ export async function getServerSideProps(context) {
 				title: "Proyecto Mobile Educatic",
 				client: "Educatic",
 				year: "2026",
+				category: "mobile",
 				tech: ["UI", "Figma", "UX"],
 				description:
 					"Aplicación web para gestión Educativa y métricas de marketing.",
@@ -331,6 +376,7 @@ export async function getServerSideProps(context) {
 				title: "Proyecto Confidencial D",
 				client: "E-commerce Global",
 				year: "2026",
+				category: "web",
 				tech: ["UI", "Figma", "UX"],
 				description:
 					"Experiencia de compra rediseñada con enfoque mobile-first y personalización.",
@@ -341,6 +387,7 @@ export async function getServerSideProps(context) {
 				title: "Visual 8 Pro",
 				client: "visual8.pro",
 				year: "2026",
+				category: "web",
 				tech: ["UI", "Web", "UX"],
 				description:
 					"Página web corporativa con diseño moderno y experiencia de usuario optimizada.",

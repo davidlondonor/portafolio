@@ -1,26 +1,13 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
-import Turnstile from "../Turnstile";
 
 export default function LoginForm({ onSubmit, t, language, toggleLanguage }) {
 	const [password, setPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 	const [error, setError] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
-	const [attemptsRemaining, setAttemptsRemaining] = useState(null);
-	const [retryAfter, setRetryAfter] = useState(null);
-	const [turnstileToken, setTurnstileToken] = useState("");
 
-	const isDev = process.env.NODE_ENV === 'development';
 	const loginFormRef = useRef(null);
-
-	const handleTurnstileVerify = useCallback((token) => {
-		setTurnstileToken(token);
-	}, []);
-
-	const handleTurnstileExpire = useCallback(() => {
-		setTurnstileToken("");
-	}, []);
 
 	useEffect(() => {
 		if (loginFormRef.current) {
@@ -41,7 +28,7 @@ export default function LoginForm({ onSubmit, t, language, toggleLanguage }) {
 			const res = await fetch("/api/portfolio-auth", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ password, turnstileToken }),
+				body: JSON.stringify({ password }),
 			});
 
 			if (res.ok) {
@@ -50,22 +37,11 @@ export default function LoginForm({ onSubmit, t, language, toggleLanguage }) {
 				const data = await res.json();
 				setError(data?.error || t.portfolio.errorPassword);
 				setPassword("");
-
-				if (data?.attemptsRemaining !== undefined) {
-					setAttemptsRemaining(data.attemptsRemaining);
-				}
-
-				if (data?.retryAfter) {
-					setRetryAfter(data.retryAfter);
-				}
-
-				setTurnstileToken("");
 				setIsLoading(false);
 			}
 		} catch (err) {
 			setError(t.portfolio.errorPassword);
 			setPassword("");
-			setTurnstileToken("");
 			setIsLoading(false);
 		}
 	};
@@ -134,34 +110,13 @@ export default function LoginForm({ onSubmit, t, language, toggleLanguage }) {
 							</button>
 						</div>
 						{error && (
-							<div className="mt-2 space-y-1">
-								<p className="text-sm text-red-500">{error}</p>
-								{attemptsRemaining !== null && attemptsRemaining > 0 && (
-									<p className="text-xs text-[var(--color-text-light)]">
-										{attemptsRemaining} {attemptsRemaining === 1 ? 'intento restante' : 'intentos restantes'}
-									</p>
-								)}
-								{retryAfter && (
-									<p className="text-xs text-amber-500">
-										Espera {Math.ceil(retryAfter / 1000 / 60)} minutos antes de intentar nuevamente
-									</p>
-								)}
-							</div>
+							<p className="mt-2 text-sm text-red-500">{error}</p>
 						)}
 					</div>
 
-					{!isDev && (
-						<div className="flex justify-center">
-							<Turnstile
-								onVerify={handleTurnstileVerify}
-								onExpire={handleTurnstileExpire}
-							/>
-						</div>
-					)}
-
 					<button
 						type="submit"
-						disabled={isLoading || retryAfter || (!isDev && !turnstileToken)}
+						disabled={isLoading}
 						className="w-full btn-minimal justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-bg)] hover:border-[var(--color-accent)] hover:scale-105"
 					>
 						{isLoading ? (

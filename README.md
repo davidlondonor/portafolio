@@ -74,17 +74,13 @@ portafolio/
 │   └── SplitTextAnimation.js
 ├── contexts/
 │   └── LanguageContext.js   # i18n ES/EN
-├── lib/
-│   ├── security.js          # Utilidades auth
-│   ├── rate-limiter.js      # Rate limiting
-│   └── access-logger.js     # Logging accesos
+├── lib/                     # (vacío tras simplificación del auth)
 ├── pages/
 │   ├── index.js             # Home
 │   ├── portfolio.js         # Portfolio protegido
 │   └── api/                 # API routes
 ├── scripts/
-│   ├── generate-password-hash.js
-│   └── view-logs.js
+│   └── generate-password-hash.js
 └── styles/
     └── globals.css
 ```
@@ -112,24 +108,11 @@ PORTFOLIO_AUTH_SECRET=...secreto_aleatorio...
 node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 ```
 
-### Ver Logs de Acceso
-
-```bash
-node scripts/view-logs.js           # Todos los intentos
-node scripts/view-logs.js --failed  # Solo fallidos
-node scripts/view-logs.js --limit=50
-```
-
 ### Características de Seguridad
 
 - Bcrypt password hashing (salt rounds: 10)
-- Rate limiting (5 intentos / 15 min por IP)
-- Logging de accesos con sanitización IP
-- JWT con cookies HttpOnly
-- Protección contra timing attacks
-- Headers de seguridad HTTP
-
-Ver documentación completa en [/docs/SECURITY.md](./docs/SECURITY.md)
+- JWT con cookies HttpOnly (1h de duración)
+- Headers de seguridad HTTP para `/api/*`
 
 ---
 
