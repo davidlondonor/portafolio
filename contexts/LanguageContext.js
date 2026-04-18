@@ -109,6 +109,13 @@ export const translations = {
 			confidentialProjects: "Proyectos",
 			exclusiveWork: "Trabajos Destacados",
 			footerPrivate: "2026 David Londoño",
+			filters: {
+				all: "Todo",
+				web: "Web",
+				app: "App",
+				mobile: "Móvil",
+			},
+			emptyState: "No hay proyectos en esta categoría.",
 		},
 	},
 	en: {
@@ -217,6 +224,13 @@ export const translations = {
 			confidentialProjects: "Projects",
 			exclusiveWork: "Featured Work",
 			footerPrivate: "2026 David Londoño",
+			filters: {
+				all: "All",
+				web: "Web",
+				app: "App",
+				mobile: "Mobile",
+			},
+			emptyState: "No projects in this category.",
 		},
 	},
 };
