@@ -1,9 +1,10 @@
 const bcrypt = require('bcryptjs');
 
-const password = process.argv[2] || 'DL2026';
+const rawPassword = process.argv[2] || 'DL2026';
+const password = rawPassword.trim().toLowerCase();
 const saltRounds = 10;
 
-console.log('\n🔐 Generating bcrypt hash...\n');
+console.log(`\n🔐 Generating bcrypt hash for normalized input "${password}" (lowercase + trimmed)...\n`);
 
 bcrypt.hash(password, saltRounds, (err, hash) => {
   if (err) {

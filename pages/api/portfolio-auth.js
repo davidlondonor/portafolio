@@ -17,7 +17,8 @@ export default async function handler(req, res) {
 		return res.status(500).json({ error: "Server not configured" });
 	}
 
-	const ok = await bcrypt.compare(password, hash);
+	const normalized = password.trim().toLowerCase();
+	const ok = await bcrypt.compare(normalized, hash);
 	if (!ok) {
 		return res.status(401).json({ error: "Invalid credentials" });
 	}
