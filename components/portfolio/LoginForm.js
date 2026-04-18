@@ -70,7 +70,7 @@ export default function LoginForm({ onSubmit, t, language, toggleLanguage }) {
 								id="password"
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
-								className="w-full px-4 py-3 pr-12 bg-[var(--color-bg-alt)] border border-[var(--color-border)] rounded-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors"
+								className="w-full px-4 py-3 pr-12 bg-[var(--color-bg-alt)] border border-[var(--color-border)] rounded-lg focus:outline-none focus:border-[var(--color-accent)] transition-colors"
 								placeholder={t.portfolio.passwordPlaceholder}
 								autoFocus
 							/>

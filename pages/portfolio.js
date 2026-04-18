@@ -7,14 +7,42 @@ import ProjectCard from "../components/portfolio/ProjectCard";
 import ArchiveGrid from "../components/portfolio/ArchiveGrid";
 
 const ARCHIVE_ITEMS = [
-	{ src: "/images/brand/agronegocios.jpg", caption: "Agronegocios" },
-	{ src: "/images/brand/proceso.jpg", caption: "Proceso" },
-	{ src: "/images/brand/carpeta-ultrafiltracion.jpg", caption: "Carpeta Ultrafiltración" },
-	{ src: "/images/brand/charla-jacto.png", caption: "Charla Jacto" },
-	{ src: "/images/brand/material-jacto.png", caption: "Material Jacto" },
-	{ src: "/images/brand/oregon.png", caption: "Oregon" },
-	{ src: "/images/brand/screen-2017-01-25.png", caption: "Screen 2017" },
-	{ src: "/images/brand/portafolio.pdf", caption: "Portafolio (PDF)", type: "pdf" },
+	{
+		src: "/images/brand/agronegocios.jpg",
+		caption: { es: "Agronegocios", en: "Agribusiness" },
+	},
+	{
+		src: "/images/brand/proceso.jpg",
+		caption: { es: "Proceso", en: "Process" },
+	},
+	{
+		src: "/images/brand/carpeta-ultrafiltracion.jpg",
+		caption: {
+			es: "Carpeta Ultrafiltración",
+			en: "Ultrafiltration Folder",
+		},
+	},
+	{
+		src: "/images/brand/charla-jacto.png",
+		caption: { es: "Charla Jacto", en: "Jacto Talk" },
+	},
+	{
+		src: "/images/brand/material-jacto.png",
+		caption: { es: "Material Jacto", en: "Jacto Material" },
+	},
+	{
+		src: "/images/brand/oregon.png",
+		caption: { es: "Oregon", en: "Oregon" },
+	},
+	{
+		src: "/images/brand/screen-2017-01-25.png",
+		caption: { es: "Screen 2017", en: "Screen 2017" },
+	},
+	{
+		src: "/images/brand/portafolio.pdf",
+		caption: { es: "Portafolio (PDF)", en: "Portfolio (PDF)" },
+		type: "pdf",
+	},
 ];
 
 export default function Portfolio({
@@ -153,7 +181,7 @@ export default function Portfolio({
 							</button>
 							<button
 								onClick={handleLogout}
-								className="nav-link text-sm border border-[var(--color-border)] px-4 py-2 rounded-sm hover:border-[var(--color-accent)]"
+								className="nav-link text-sm border border-[var(--color-border)] px-4 py-2 rounded-lg hover:border-[var(--color-accent)]"
 							>
 								{t.portfolio.logout}
 							</button>
@@ -214,7 +242,7 @@ export default function Portfolio({
 									toggleLanguage();
 									setIsMobileMenuOpen(false);
 								}}
-								className="text-xl uppercase border border-[var(--color-border)] px-6 py-2 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors"
+								className="text-xl uppercase border border-[var(--color-border)] px-6 py-2 rounded-lg hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors"
 							>
 								{language === "es" ? "EN" : "ES"}
 							</button>
@@ -223,7 +251,7 @@ export default function Portfolio({
 									handleLogout();
 									setIsMobileMenuOpen(false);
 								}}
-								className="text-xl border border-[var(--color-border)] px-6 py-2 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors"
+								className="text-xl border border-[var(--color-border)] px-6 py-2 rounded-lg hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors"
 							>
 								{t.portfolio.logout}
 							</button>
@@ -362,82 +390,115 @@ export async function getServerSideProps(context) {
 		projects = [
 			{
 				num: "01",
+				title: "Design System EPM",
+				client: "EPM",
+				year: "2025",
+				category: "app",
+				tech: ["UI", "Figma", "UX"],
+				description: {
+					es: "Sistema de diseño y UI kit para la plataforma interna de EPM.",
+					en: "Design system and UI kit for EPM's internal platform.",
+				},
+				images: [
+					"/images/ui-kit-epm.jpg",
+					"/images/ui-kit-epm-details.png",
+				],
+				url: "https://www.epm.com.co/",
+			},
+			{
+				num: "02",
 				title: "Dashboard Empresarial",
 				client: "EPM",
 				year: "2025",
 				category: "app",
 				tech: ["UI", "Figma", "UX"],
-				description:
-					"Plataforma empresarial completa con dashboard de analytics en tiempo real.",
+				description: {
+					es: "Plataforma empresarial completa con dashboard de analytics en tiempo real.",
+					en: "Complete enterprise platform with real-time analytics dashboard.",
+				},
 				image: "/images/epm.png",
 				url: "https://www.epm.com.co/",
 			},
 			{
-				num: "02",
+				num: "03",
 				title: "Proyecto Energía",
 				client: "XM",
 				year: "2025",
 				category: "app",
 				tech: ["UI", "Figma", "UX"],
-				description:
-					"Sistema de pagos y gestión financiera con integraciones bancarias.",
+				description: {
+					es: "Sistema de transacción de energía, dashboard y analítica.",
+					en: "Energy trading system, dashboard and analytics.",
+				},
 				image: "/images/xm.png",
 				url: "https://www.xm.com.co/",
 			},
 			{
-				num: "03",
+				num: "04",
 				title: "Proyecto Mobile Educatic",
 				client: "Educatic",
 				year: "2026",
 				category: "mobile",
 				tech: ["UI", "Figma", "UX"],
-				description:
-					"Aplicación web para gestión Educativa y métricas de marketing.",
+				description: {
+					es: "Aplicación web para gestión Educativa y métricas de marketing.",
+					en: "Web application for education management and marketing metrics.",
+				},
 				image: "/images/educatic.png",
 				url: "https://www.educatic.com.co/",
 			},
 			{
-				num: "04",
+				num: "05",
 				title: "Proyecto Confidencial D",
 				client: "E-commerce Global",
 				year: "2026",
 				category: "web",
 				tech: ["UI", "Figma", "UX"],
-				description:
-					"Experiencia de compra rediseñada con enfoque mobile-first y personalización.",
+				description: {
+					es: "Experiencia de compra rediseñada con enfoque mobile-first y personalización.",
+					en: "Redesigned shopping experience with mobile-first focus and personalization.",
+				},
 				image: "/images/confidencial-d.png",
 			},
 			{
-				num: "05",
+				num: "06",
 				title: "Visual 8 Pro",
 				client: "visual8.pro",
 				year: "2026",
 				category: "web",
 				tech: ["UI", "Web", "UX"],
-				description:
-					"Página web corporativa con diseño moderno y experiencia de usuario optimizada.",
+				description: {
+					es: "Página especializada en empaques y branding. Diseño moderno y experiencia de usuario optimizada.",
+					en: "Website specialized in packaging and branding. Modern design and optimized user experience.",
+				},
 				image: "/images/visual8pro.png",
 				url: "https://visual8.pro",
 			},
 			{
-				num: "06",
+				num: "07",
 				title: "Trans Pacific Atlantic",
 				client: "Trans Pacific Atlantic",
 				year: "2026",
 				category: "web",
 				tech: ["UI", "Web", "UX"],
-				description: "Logística B2B.",
+				description: {
+					es: "Plataforma para el comercio internacional y B2B.",
+					en: "Platform for international trade and B2B.",
+				},
 				image: "/images/transpacificatlantic.jpg",
 				url: "https://transpacificatlantic.com",
 			},
 			{
-				num: "07",
+				num: "08",
 				title: "Specialized Fitness Nutrition",
 				client: "Specialized Fitness Nutrition",
 				year: "2025",
 				category: "web",
 				tech: ["UI", "Web", "UX"],
-				description: "Nutrición deportiva especializada.",
+				description: {
+					es: "Página B2C para un gimnasio, sus clientes y selección de clases.",
+					en: "B2C website for a gym, its clients and class selection.",
+				},
 				image: "/images/specializedfitnessnutrition.jpg",
 				url: "https://specializedfitnessnutrition.com/",
 			},
