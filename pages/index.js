@@ -5,7 +5,7 @@ import AnimatedHero from "../components/AnimatedHero";
 import RevealOnScroll from "../components/RevealOnScroll";
 import CardAnimation from "../components/CardAnimation";
 import SplitTextAnimation from "../components/SplitTextAnimation";
-import { ShaderAnimation } from "@/components/ui/shader-animation";
+import PixelField from "@/components/ui/pixel-field";
 
 export default function Home() {
 	const { language, toggleLanguage, t } = useLanguage();
@@ -110,12 +110,7 @@ export default function Home() {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
-			{/* Animated Shader Background */}
-			<div className="fixed inset-0 z-0">
-				<ShaderAnimation />
-			</div>
-
-			<div className="page-transition relative z-10">
+			<div className="page-transition relative z-10 bg-[#0a0a09]">
 				{/* Navigation */}
 				<nav className="fixed top-8 left-0 right-0 z-50 bg-black/30 backdrop-blur-sm">
 					<div className="container-editorial py-6 flex justify-between items-center">
@@ -212,40 +207,43 @@ export default function Home() {
 					</div>
 				</nav>
 
-				{/* Hero Section with GSAP Animation */}
-				<AnimatedHero>
-					<section
-						id="inicio"
-						className="min-h-screen flex items-center pt-24"
-					>
-						<div className="container-editorial">
-							<div className="grid-editorial items-end">
-								{/* Left Column */}
-								<div className="space-y-6">
-									<p className="body-sm hero-title text-white/70">{t.hero.role}</p>
-									<div className="accent-line hero-accent-line bg-white/50"></div>
-								</div>
-
-								{/* Right Column */}
-								<div className="space-y-8">
-									<h1 className="display-xl text-white">
-										<span className="hero-title block">UX UI</span>
-										<span className="hero-title block text-[0.7em] whitespace-nowrap" style={{ fontFamily: 'var(--font-geist-pixel-square)' }}>&lt;Developer /&gt;</span>
-									</h1>
-									<p className="body-lg max-w-lg hero-description text-white/70">
-										{t.hero.description}
-									</p>
-								</div>
+			{/* Hero Section with GSAP Animation */}
+			<AnimatedHero>
+				<section
+					id="inicio"
+					className="relative overflow-hidden min-h-screen flex items-center pt-24"
+				>
+					<div className="absolute inset-0 z-0" aria-hidden="true">
+						<PixelField />
+					</div>
+					<div className="container-editorial relative z-10">
+						<div className="grid-editorial items-end">
+							{/* Left Column */}
+							<div className="space-y-6">
+								<p className="body-sm hero-title text-white/70">{t.hero.role}</p>
+								<div className="accent-line hero-accent-line bg-white/50"></div>
 							</div>
 
-							{/* Scroll indicator */}
-							<div className="mt-24 flex items-center gap-4 scroll-indicator">
-								<span className="body-sm text-white/60">{t.hero.scroll}</span>
-								<div className="w-px h-12 bg-white/30"></div>
+							{/* Right Column */}
+							<div className="space-y-8">
+								<h1 className="display-xl text-white">
+									<span className="hero-title block">UX UI</span>
+									<span className="hero-title block text-[0.7em] whitespace-nowrap" style={{ fontFamily: 'var(--font-geist-pixel-square)' }}>&lt;Developer /&gt;</span>
+								</h1>
+								<p className="body-lg max-w-lg hero-description text-white/70">
+									{t.hero.description}
+								</p>
 							</div>
 						</div>
-					</section>
-				</AnimatedHero>
+
+						{/* Scroll indicator */}
+						<div className="mt-24 flex items-center gap-4 scroll-indicator">
+							<span className="body-sm text-white/60">{t.hero.scroll}</span>
+							<div className="w-px h-12 bg-white/30"></div>
+						</div>
+					</div>
+				</section>
+			</AnimatedHero>
 
 				{/* Marquee */}
 				<div className="marquee-editorial my-12">
@@ -275,7 +273,7 @@ export default function Home() {
 				</div>
 
 				{/* Services Section */}
-				<section id="servicios" className="section bg-black/50 backdrop-blur-sm">
+				<section id="servicios" className="section bg-black/50">
 					<div className="container-editorial">
 						<RevealOnScroll className="grid-editorial items-start">
 							{/* Left */}
@@ -317,7 +315,7 @@ export default function Home() {
 				</section>
 
 				{/* About Section */}
-				<section className="section bg-black/60 backdrop-blur-sm">
+				<section className="section bg-black/60">
 					<div className="container-editorial">
 						<RevealOnScroll
 							className="grid-asymmetric items-center"
@@ -350,7 +348,7 @@ export default function Home() {
 				</section>
 
 				{/* Projects Section */}
-				<section id="proyectos" className="section bg-black/50 backdrop-blur-sm">
+				<section id="proyectos" className="section bg-black/50">
 					<div className="container-editorial">
 						<RevealOnScroll className="mb-16">
 							<p className="body-sm mb-4 text-white/60">{t.projects.label}</p>
