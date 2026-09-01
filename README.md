@@ -2,30 +2,31 @@
 
 Portafolio personal con animaciones avanzadas, shaders WebGL y diseño editorial moderno.
 
-**[Ver Demo](https://davidlondono.vercel.app)** | **[GitHub](https://github.com/davidlondonor)**
+**[Ver Demo](https://davidlondono.co)** | **[GitHub](https://github.com/davidlondonor)**
 
 ---
 
 ## Tech Stack
 
-| Frontend | Animaciones | Seguridad |
-|----------|-------------|-----------|
-| Next.js 16 | GSAP 3 | JWT Auth |
+| Frontend | Animaciones | Auth |
+|----------|-------------|------|
+| Next.js 16 | GSAP 3 | JWT |
 | React 19 | Three.js | Bcrypt |
-| Tailwind CSS | WebGL Shaders | Rate Limiting |
-| TypeScript | Scroll Reveal | HttpOnly Cookies |
+| Tailwind CSS | WebGL Shaders | HttpOnly Cookies |
+| TypeScript | Scroll Reveal | SameSite=Lax |
 
 ---
 
 ## Características
 
-- **Animaciones GSAP** - Hero animado, reveal on scroll, staggered text, cards interactivas
-- **Shader Background** - Fondo animado con WebGL/Three.js
-- **Multilingüe** - Soporte Español/Inglés con context API
-- **Diseño Responsive** - Mobile-first con menú hamburguesa animado
-- **Portfolio Protegido** - Sección privada con autenticación segura
-- **Formulario de Contacto** - Integración con Web3Forms
-- **Vercel Analytics** - Métricas de rendimiento
+- **Animaciones GSAP** — Hero animado, reveal on scroll, staggered text, cards interactivas
+- **Shader Background** — Fondo animado con WebGL/Three.js
+- **Multilingüe ES/EN sin flash** — Idioma leído server-side desde cookie (`Accept-Language` de fallback) en `MyApp.getInitialProps`, sin hydration mismatch
+- **Diseño Responsive** — Mobile-first con menú hamburguesa animado
+- **Portfolio Protegido** — Sección privada con password bcrypt + JWT en cookie HttpOnly
+- **Grid + Archive + Multi-imagen** — Cards filtrables por categoría, segunda sección "Archive" con piezas secundarias, modales con navegación por flechas/teclado/swipe
+- **Formulario de Contacto** — Integración con Web3Forms
+- **Vercel Analytics** — Métricas de rendimiento
 
 ---
 
@@ -36,14 +37,14 @@ Portafolio personal con animaciones avanzadas, shaders WebGL y diseño editorial
 git clone https://github.com/davidlondonor/portafolio.git
 cd portafolio
 
-# Instalar dependencias
-npm install
+# Instalar dependencias (lockfile con pnpm)
+pnpm install
 
 # Configurar variables de entorno
 cp .env.example .env.local
 
 # Iniciar desarrollo
-npm run dev
+pnpm dev
 ```
 
 Abrir [http://localhost:3000](http://localhost:3000)
@@ -54,10 +55,10 @@ Abrir [http://localhost:3000](http://localhost:3000)
 
 | Comando | Descripción |
 |---------|-------------|
-| `npm run dev` | Servidor de desarrollo |
-| `npm run build` | Build de producción |
-| `npm run start` | Servidor de producción |
-| `npm run lint` | Ejecutar ESLint |
+| `pnpm dev` | Servidor de desarrollo |
+| `pnpm build` | Build de producción |
+| `pnpm start` | Servidor de producción |
+| `pnpm lint` | Ejecutar ESLint |
 
 ---
 
@@ -66,19 +67,25 @@ Abrir [http://localhost:3000](http://localhost:3000)
 ```
 portafolio/
 ├── components/
-│   ├── ui/                  # Componentes UI (shaders)
-│   ├── portfolio/           # Componentes del portfolio
-│   ├── AnimatedHero.js      # Hero con GSAP
-│   ├── RevealOnScroll.js    # Animación scroll
-│   ├── CardAnimation.js     # Cards animadas
+│   ├── ui/                   # Componentes UI (shaders)
+│   ├── portfolio/
+│   │   ├── LoginForm.js      # Gate de password
+│   │   ├── ProjectCard.js    # Card + modal multi-imagen
+│   │   └── ArchiveGrid.js    # Archive secundario con modal y flechas
+│   ├── AnimatedHero.js       # Hero con GSAP
+│   ├── RevealOnScroll.js     # Animación scroll
+│   ├── CardAnimation.js      # Cards animadas
 │   └── SplitTextAnimation.js
 ├── contexts/
-│   └── LanguageContext.js   # i18n ES/EN
-├── lib/                     # (vacío tras simplificación del auth)
+│   └── LanguageContext.js    # i18n ES/EN (cookie + SSR initial)
 ├── pages/
-│   ├── index.js             # Home
-│   ├── portfolio.js         # Portfolio protegido
-│   └── api/                 # API routes
+│   ├── _app.js               # getInitialProps lee cookie de idioma
+│   ├── index.js              # Home
+│   ├── portfolio.js          # Portfolio protegido
+│   └── api/                  # API routes (portfolio-auth, contact, …)
+├── public/images/
+│   ├── (proyectos principales) # epm.png, xm.png, visual8pro.png, …
+│   └── brand/                # Archive secundario
 ├── scripts/
 │   └── generate-password-hash.js
 └── styles/
@@ -89,7 +96,7 @@ portafolio/
 
 ## Autenticación
 
-El portfolio incluye una sección protegida con seguridad de nivel empresarial.
+El portfolio incluye una sección protegida con un password gate simple. Protege screenshots y piezas de clientes — no secretos. No hay rate limiting ni captcha (removidos intencionalmente); ver `CLAUDE.md` para el razonamiento.
 
 ### Configurar Contraseña
 
@@ -108,11 +115,12 @@ PORTFOLIO_AUTH_SECRET=...secreto_aleatorio...
 node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 ```
 
-### Características de Seguridad
+### Características
 
-- Bcrypt password hashing (salt rounds: 10)
-- JWT con cookies HttpOnly (1h de duración)
-- Headers de seguridad HTTP para `/api/*`
+- Bcrypt password hashing (salt rounds: 10), comparación case-insensitive + trim
+- JWT firmado con `PORTFOLIO_AUTH_SECRET`, cookie `HttpOnly; SameSite=Lax` (1h de duración)
+- Re-verificación en `getServerSideProps` de `/portfolio` en cada request
+- Headers de seguridad HTTP para `/api/*` (X-Frame-Options, X-Content-Type-Options, Referrer-Policy)
 
 ---
 
@@ -139,8 +147,8 @@ PORTFOLIO_AUTH_SECRET=       # Secret para JWT (min 32 chars)
 ### Manual
 
 ```bash
-npm run build
-npm run start
+pnpm build
+pnpm start
 ```
 
 ---

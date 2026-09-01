@@ -33,13 +33,17 @@ Styling is Tailwind (v3) plus heavy custom CSS in `styles/globals.css` defining 
 
 ### Top-level flow
 
-- `pages/_app.js` wraps every page in `LanguageProvider` (from `contexts/LanguageContext.js`), injects Geist fonts, and conditionally loads Cloudflare Web Analytics (`NEXT_PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN`) and the Voiceflow chat widget. `@vercel/analytics` also mounts here.
+- `pages/_app.js` wraps every page in `LanguageProvider` (from `contexts/LanguageContext.js`), injects Geist fonts, and conditionally loads Cloudflare Web Analytics (`NEXT_PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN`). `@vercel/analytics` also mounts here. `MyApp.getInitialProps` reads the `preferred-language` cookie (and falls back to `Accept-Language`) server-side so the initial render matches the user's language — no hydration flash.
 - `pages/index.js` is the public single-page site: hero, services, about, projects, contact. Uses `AnimatedHero`, `RevealOnScroll`, `CardAnimation`, `SplitTextAnimation`, and `ShaderAnimation`. The contact form posts to `/api/contact` (plain Web3Forms proxy, no captcha).
-- `pages/portfolio.js` is a password-protected page. It runs `getServerSideProps` which reads the `portfolio_auth` cookie, verifies the JWT with `PORTFOLIO_AUTH_SECRET`, and only then returns `portfolioProjects`. Unauthenticated requests render `components/portfolio/LoginForm.js` instead.
+- `pages/portfolio.js` is a password-protected page. It runs `getServerSideProps` which reads the `portfolio_auth` cookie, verifies the JWT with `PORTFOLIO_AUTH_SECRET`, and only then returns `portfolioProjects`. Unauthenticated requests render `components/portfolio/LoginForm.js` instead. The authenticated view renders a grid of `ProjectCard`s plus an `ArchiveGrid` (secondary brand/print archive under `/public/images/brand/`).
 
 ### i18n
 
 `contexts/LanguageContext.js` holds the full ES/EN translation tree inline (`translations.es`, `translations.en`) and exposes `{ language, toggleLanguage, t }`. All user-facing copy should be read from `t.*` rather than hard-coded. Despite `next-translate` being in `package.json`, it is not wired up — the Context API above is the source of truth.
+
+The provider accepts an `initialLanguage` prop (set by `_app.js` from the server-side cookie/`Accept-Language` read) and uses it as the `useState` seed so SSR and client render the same language from the first frame. `toggleLanguage` writes the `preferred-language` cookie (`SameSite=Lax`, 1-year max-age) — not `localStorage` — so the server can read it on the next request.
+
+Portfolio project data (`description`) and `ArchiveGrid` captions are stored as `{ es, en }` objects instead of plain strings. Components use a small `loc(value, lang)` helper that accepts either a string (backward-compat) or an object. Aria-labels for modal controls (close/prev/next) also come from `t.portfolio.a11y.*`.
 
 ### Animations
 
@@ -69,4 +73,5 @@ See `.env.example`. Required for the portfolio auth flow: `PORTFOLIO_PASSWORD_HA
 - `next.config.js` whitelists `images.unsplash.com` for `next/image`; add new remote hosts there rather than using `<img>`.
 - `backup-design-*/` directories are archived snapshots (gitignored) — don't edit them or import from them.
 - `pages/index.html` and `pages/index.js.backup` are legacy artifacts; the live home page is `pages/index.js`.
-- `resumen.md` describes an earlier version of this project (Next.js 12, yellow hero) and is stale — prefer `README.md` and `docs/SECURITY.md` for current context.
+- Project images live in `/public/images/` with semantic names (`epm.png`, `xm.png`, `visual8pro.png`, etc.). Archive/print pieces live in `/public/images/brand/`. `ProjectCard` accepts either `image: "..."` (single) or `images: [...]` (multiple — modal gains arrow/keyboard/swipe navigation and a `+N` badge on the card).
+- Buttons and inputs use `rounded-lg` for visual consistency; card images use `rounded-[1.5rem]`. The contact form submit hover is blue (`#1d4ed8`) rather than the site's red accent to avoid the "alert" feel on a primary CTA.
